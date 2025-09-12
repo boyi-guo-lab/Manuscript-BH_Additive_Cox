@@ -1,0 +1,298 @@
+\documentclass[11pt]{article}
+\usepackage{amsthm,amsmath,amssymb,epsfig,graphicx,color,bbm}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.3in}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{-0.65in}
+\def\T{{ \mathrm{\scriptscriptstyle T} }}
+\usepackage[dvipsnames]{xcolor}
+
+
+\newcommand{\fixme}[1]{\textcolor{red}{\bf #1}}
+
+\setlength\parindent{0pt}
+\usepackage{natbib}
+\bibliographystyle{agsm}
+
+\begin{document}
+
+\hrule
+\vspace*{0.02cm}
+\hrule
+\vspace*{1cm}
+{\Large \bf Response to Reviewers' Comments}
+\vspace*{1cm}
+\hrule
+\vspace*{0.5cm}
+\begin{tabular}{llp{11.5cm}}
+Manuscript No. & : & SIM-24-0127 \\
+Title & : & A scalable additive Cox proportional hazards model for high-dimensional survival prediction and functional selection\\
+\end{tabular}
+\vspace*{0.5cm}
+\hrule
+\vspace*{0.02cm}
+\hrule
+
+\vspace*{1cm}
+
+First, we would like to thank you for handling this paper and thank the AE and both reviewers for their valuable comments. We have carefully addressed all the comments. Point-by-point responses are given below, where each comment is quoted in {\em italics}.
+
+\bigskip
+
+{\bf Response to Associate Editor}
+
+{\bf Response:} Thanks for your comments! We want to summarize the major changes of our manuscript as a response to address these comments:
+
+\begin{itemize}
+    \item \fixme{}
+\end{itemize}
+
+\medskip
+
+\newpage
+{\bf Response to Reviewer \#1}
+
+We sincerely thank you for the valuable comments. We have carefully addressed all the comments. A point-by-point response is given below, where each of your comments is quoted in {\em italics}. \textbf{For a summary of major changes, please see our response to the Associate Editor. }
+
+\bigskip
+
+{\em In this paper, the authors utilized the spike-and-slab LASSO prior and the penalized spline method to explore the functional selection problem in the Coxph model. To overcome the challenge of running MCMC for complex Hierarchical models, the proposed method is implemented through an EM-Coordinate Descent approach. Overall, I found the manuscript clearly written, and the topic of practical relevance. However, I think the simulation and real data application require significant improvements to highlight the key features of the proposed method.
+}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em GENERAL COMMENTS}
+
+\medskip
+
+{\em Major issues:}
+
+\medskip
+
+{\em 1. An important aspect of the method that the authors have described in Section 2 is on its selection property. However, the simulation in Section 3 does not give detailed comparison in terms of the selection accuracy of the linear and nonlinear terms. Furthermore, the results presented in Figure 1 and Table 1 do not seem to be very illustrative. I suggest the authors expand the simulation section with illustrations of how the proposed method accurately selects the linear/nonlinear functions in the high-dimensional setting.}
+
+\medskip
+
+\textbf{Response:} 
+
+
+\bigskip
+
+{\em 2. Following the above comment, the real data example in Section 4 appears to be too brief. The KM estimates provided in Figure 3 do not illustrate the main properties of the proposed method in terms of selection of functional terms. I would like to see how the proposed method performs in terms of the bi-level selection described earlier in this example.}
+
+\medskip
+
+\textbf{Response:} 
+
+\medskip
+
+{\em 3. In Equation 2 at Section 2.1, the authors proposed the selection of non-linear coefficients based on a similar LASSO type of penalty. I wonder what would be the advantage of such a penalty for selection of non-linear terms compared to directly applying a selection on the smoothing parameter, see [1] for example. When the smoothing parameter is penalized toward zero, the function will be shrunk to a linear function. I suggest the authors provide more conceptual comparisons with other methods here.}
+
+\bigskip
+
+{\em Specific comments:}\\
+
+{\em 1.In Section 2 (line 23-24): “the zero eigenvalues and the corresponding eigenvectors span the linear space of spline functions, which allows us to separate from the nonlinear space”.
+This sentence seems imprecise and should be rephrased.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 2. In Section 2.1 line 21, there appears to be an extra “)”.
+}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 3. In Section 2.2 line 5-6: “it is common to approximate posterior density with the product of partial likelihood function in Equation (1) and marginal priors”. It is not clear to me why the prior is “marginal”. The prior that appears in the equations seems to be the joint prior.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 4. In Section 2.2 line 45-46, I suggest the authors mention and briefly compare with some alternative model fitting algorithms that can efficiently fit Bayesian hierarchical Coxph models with smoothing effects, such as [2] and [3].}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 5. There appears to be some typos in the figure captions. For example, some latex equations were not correctly rendered in the caption of Figure 1. In the caption of Figure 3, the word “performance” is incorrectly spelled.}
+
+\medskip
+
+\textbf{Response:} 
+
+
+\newpage
+{\bf Response to Reviewer \#2}
+
+We sincerely thank you for the valuable comments. We have carefully addressed all the comments. A point-by-point response is given below, where each of your comments is quoted in {\em italics}. \textbf{For a summary of major changes, please see our response to the Associate Editor. }
+
+\bigskip
+
+{\em Overall COMMENTS}
+
+\medskip
+
+{\em This paper proposes the flexible proportional hazards model consisting of the linear and nonlinear functions for each the predictor. To enable the proposed model to have the variable selection, the authors have used the spike slab prior distribution with the two stage procedures and argued that the proposed flexible model has the variable selection ability, leads to the risk prediction, and improves the computational efficiency. However, the explanation of important idea for their method is not accurately conveyed, and improvements in computations are not specifically shown. Numerical simulation scenario dose not seem to be sufficient to be valid in practice. Additionally, there appears to be a lack of efforts to describe the purpose, findings, meaning, interpretation, and results in the real data analysis, which yields the difficult in convincing the justification of the proposed method to the readers in the biomedical fields.}
+
+\medskip
+
+\textbf{Response:}
+
+\bigskip
+
+{\em Major Issues}
+
+
+\medskip
+
+{\em 1. In section 2, the simultaneous use of linear functions and non-parametric functions is the main idea of this paper, but this part is not being conveyed well methodologically. For instance, $X_∗$ in line 26 on page 3, was not precisely defined and I do not understand how this can connect with the penalty matrix, even if it is a main approach in this paper. More details are needed.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 2. In section 2, the notations seem to be inaccurate for $X_0$, $X_{ij}$.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 3. In section 2, following the equation (3), the author intended not to enter the nonlinear term in the model when the linear term is not selected. My question is why this approach can be justified? For example, there may be a case that the logarithm hazard has been affected only by the nonlinear function of the jth predictor, and in this case, the proposed approach may not select the correct predictor.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 4. In section 2, although the author introduced the beta-binomial conjugate relationship in the equation (4), I do not well understand how this equation can be derived. Can you give more details about this?}
+
+\medskip
+
+\textbf{Response:} 
+
+{\em 5. The author used the model with s1 = 0.5. The sensitivity analysis for this hyper parameter is needed. Otherwise, the author’s second claim in section 2.1 that the proposed prior provides bi-level selection without testing or thresholding value may not be valid.}
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 6. In section 3, I think it would be better to briefly introduce the software used in the introduction.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 7. In section 3.2, the true nonlinear functions of the population and the basis functions used in the sample seem to be the same. If so, I think it is somewhat difficult to justify the numerical experiment}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+
+{\em 8. In section 3.2, although authors are talking about problem solving regarding high-dimensional data, the variable dimension of the numerical experiment is too small. More realistic numerical experiments should be performed.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+
+{\em 9. In section 3.2, it seems necessary to consider the possible range of scenarios, such as case where linear functions and non-linear functions act simultaneously, case where only linear functions act, or case where only non-linear functions are act in the model.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+
+{\em 10. In section 3.2, 50 repetitions seems too small.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 11. If the methods being compared are difficult to apply for various reasons, the results should be derived from the methods mentioned through efforts such as using other methods or increasing the number of samples. If it cannot be run through errors like it is now, there seems to be no reason to mention the comparison method.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 12. In section 3.2, it also seems possible to compare at least some papers that use the proposed spike-slab prior distribution in the time-to-event data.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+
+{\em 13. In section 3.2, it is difficult to agree with the topic or argument of this paper because there is no way to check how much it will improve computationally.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 14. In section 4, the description of the data to be analyzed is very insufficient. It is difficult to understand the scientific or biomedical goals of this study associated with the metabolically data set, This does not seem to fit the aims of this journal.}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+{\em 15. I do not understand why Table 1 is needed}
+
+\medskip
+
+\textbf{Response:} 
+
+\bigskip
+
+
+{\em 16. It is impossible to know which variables were selected through actual data analysis, how the risk score was defined, and how low-risk groups and high-risk groups were defined. The data analysis part seems to be very lacking.}
+\medskip
+
+\textbf{Response:} 
+
+
+\bibliographystyle{rss}
+\bibliography{ref}
+\end{document}
