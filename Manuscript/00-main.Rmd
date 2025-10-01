@@ -34,6 +34,7 @@ bibliography: "references.bib"
 header-includes: 
     - \usepackage{amsmath}
 ---
+
 \newcommand{\pr}{\text{Pr}}
 \newcommand{\bs}[1]{\boldsymbol{#1}}
 \newcommand{\tp}{*}
@@ -50,7 +51,6 @@ tar_load(manu_figs)
 
 ```
 
-
 ```{r intro, child = "~/GitHub/Manuscript-BH_Additive_Cox/Manuscript/01-intro.Rmd"}
 ```
 
@@ -65,10 +65,10 @@ tar_load(manu_figs)
 
 ```{r conclusion, child="~/GitHub/Manuscript-BH_Additive_Cox/Manuscript/05-conclusion.Rmd"}
 ```
+
 \clearpage
 \input{Tabs/sim_cnr_prop.tex}
 \clearpage
-
 \begin{figure}[h] 
 \includegraphics{Figs/true_sig_plot.pdf}
 \caption{Nonlinear hazard ratio functions used in the simulation study, including $B_1(x) = (5x-2)^2/20-3, B_2(x) = \exp(x+1)/10, B_3(x_3) = 2*sin(4x)$, and $B_4(x) = (1.4x+0.5)/2$. The blue dotted lines denote the functional estimations under the linearity assumption.}
@@ -92,4 +92,3 @@ tar_load(manu_figs)
 \end{figure}
 
 \clearpage
-

@@ -1,94 +1,315 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
 \section{Additive Cox Proportional Hazards  Model}
 
-For each individual indexed with $i$, we collect the the covariate variables $\bs X_i = (X_{i1}, \dots, X_{ip}) \in \mathbb{R}^{p}$ and the survival outcome $(T_i, D_i) \in \{\mathbb{R}^+ \times \{0,1\}\}$ where $T_i$ is the observed survival time, and $D_i$ is a binary censoring indicator. We assume the sample size $n$ can be smaller than the number of predictors $p$ to accommodate the high-dimensional setting. The censoring indicator $D_i$ takes the value 1 when the event of interest happens at the survival time $T_i$, and takes the value 0 when censoring happens. We assume non-informative right censoring, no competing risk or multiple occurrence of the event. Following the proportional hazards assumption, a Cox model with spline functions in the matrix form $B_j(x_j) = \bs \beta_j \bs X_j, j=1,\dots, p$ is formulated as $$
+For each individual indexed with $i$, we collect the the covariate
+variables $\bs X_i = (X_{i1}, \dots, X_{ip}) \in \mathbb{R}^{p}$ and the
+survival outcome $(T_i, D_i) \in \{\mathbb{R}^+ \times \{0,1\}\}$ where
+$T_i$ is the observed survival time, and $D_i$ is a binary censoring
+indicator. We assume the sample size $n$ can be smaller than the number
+of predictors $p$ to accommodate the high-dimensional setting. The
+censoring indicator $D_i$ takes the value 1 when the event of interest
+happens at the survival time $T_i$, and takes the value 0 when censoring
+happens. We assume non-informative right censoring, no competing risk or
+multiple occurrence of the event. Following the proportional hazards
+assumption, a Cox model with spline functions in the matrix form
+$B_j(x_j) = \bs \beta_j \bs X_j, j=1,\dots, p$ is formulated as $$
 h(t_i|\bs x_i) = h_0(t_i)\exp(\sum\limits^p_{j=1}B_j(x_{ij})) = h_0(t_i) \exp(\sum\limits^p_{j=1}\bs \beta^T_j \bs X_{ij}).
-$$ 
-The design matrix $\bs X_j$ for spline function $B_j(x_j)$ of variable $X_j$\footnote{Bold characters denote vectors and matrices, and unbold characters denotes scalars.} is assumed $K+1$ dimensional\footnote{We assume the uniform dimensionality of spline functions for notation simplicity. It is trivial to generalize to diverse dimensionalities.} and has an identifiability constraint $E[B_j(X_j)] = 0$. The hazard function $h(t)$ describes the instantaneous rate of event occurrence among people who are still at risk at the moment. To note, there is no intercept term as the baseline hazard function $h_0(t)$ estimates the reference level of survival risk. We defer to \cite{Klein2003} for full treatment of Cox proportional hazards models.
+$$ The design matrix $\bs X_j$ for spline function $B_j(x_j)$ of
+variable
+$X_j$\footnote{Bold characters denote vectors and matrices, and unbold characters denotes scalars.}
+is assumed $K+1$
+dimensional\footnote{We assume the uniform dimensionality of spline functions for notation simplicity. It is trivial to generalize to diverse dimensionalities.}
+and has an identifiability constraint $E[B_j(X_j)] = 0$. The hazard
+function $h(t)$ describes the instantaneous rate of event occurrence
+among people who are still at risk at the moment. To note, there is no
+intercept term as the baseline hazard function $h_0(t)$ estimates the
+reference level of survival risk. We defer to \cite{Klein2003} for full
+treatment of Cox proportional hazards models.
 
-To fit the Cox model, it is convenient to maximize the partial log-likelihood function \cite{cox1972}, mathematically, \begin{equation}\label{eq:partial-likelihood}
+To fit the Cox model, it is convenient to maximize the partial
+log-likelihood function \cite{cox1972}, mathematically,
+\begin{equation}\label{eq:partial-likelihood}
 pl(\bs \beta) = \sum\limits^n_{i=1}d_i\log\frac{\exp{(\bs \beta^T\bs x_i )}}{\sum_{{i^\prime} \in R(t_i)} \exp(\bs \beta^T bs x_{i^\prime})},
-\end{equation} where $R(t_i)$ denotes the risk set at time $t_i$, i.e. the set of all patients who still survived prior to time $t_i$. When tied failure or censoring time exists, a modified partial log-likelihood function \cite{Efron1977} can be used. Conditional on $\bs \beta$, the baseline hazard function $h_0(t_i)$ can be estimated using Breslow estimator \cite{breslow1974}, $$
+\end{equation} where $R(t_i)$ denotes the risk set at time $t_i$, i.e.
+the set of all patients who still survived prior to time $t_i$. When
+tied failure or censoring time exists, a modified partial log-likelihood
+function \cite{Efron1977} can be used. Conditional on $\bs \beta$, the
+baseline hazard function $h_0(t_i)$ can be estimated using Breslow
+estimator \cite{breslow1974}, $$
 \hat h_0(t_i|\bs \beta) = d_i/\sum\limits_{i^\prime \in R(t_i)} \exp(\bs \beta^T \bs x_{i^\prime}).
 $$
 
-To encourage proper smoothing of the functions, we adopt the idea of smoothing penalties from smoothing spline models \cite{Wood2017}. Smoothing penalty facilitates the data-driven estimation of function smoothness and is mathematically defined as the integrated squared second derivative of smooth functions. While it is hard to directly integrate smoothing penalty with sparsity penalty in high-dimensional settings, \cite{Marra2011} proposed a reparameterization to absorb smoothing penalty to the design matrix. Given the known smoothing penalty matrix $\bs S$ of a univariate spline functions $B(x)$ is symmetric and positive semi-definite, we apply eigendecomposition on the penalty matrix $\bs S = \bs U \bs D \bs U^T$, where eigenvectors and eigenvalues are arranged in the matrices $\bs U$ and $\bs D$ respectively. The zero eigenvalues and the corresponding eigenvectors span the linear space of spline functions, which allows us to separate from the nonlinear space. Multiplying the design matrix $X$ by the eigenvector matrix $U$ and scaling by the eigenvalues, we reparameterize the spline functions $B_j(x_j)$, mathematically $$
+To encourage proper smoothing of the functions, we adopt the idea of
+smoothing penalties from smoothing spline models \cite{Wood2017}.
+Smoothing penalty facilitates the data-driven estimation of function
+smoothness and is mathematically defined as the integrated squared
+second derivative of smooth functions. While it is hard to directly
+integrate smoothing penalty with sparsity penalty in high-dimensional
+settings, \cite{Marra2011} proposed a reparameterization to absorb
+smoothing penalty to the design matrix. Given the known smoothing
+penalty matrix $\bs S$ of a univariate spline functions $B(x)$ is
+symmetric and positive semi-definite, we apply eigendecomposition on the
+penalty matrix $\bs S = \bs U \bs D \bs U^T$, where eigenvectors and
+eigenvalues are arranged in the matrices $\bs U$ and $\bs D$
+respectively. The zero eigenvalues and the corresponding eigenvectors
+span the linear space of spline functions, which allows us to separate
+from the nonlinear space. Multiplying the design matrix $X$ by the
+eigenvector matrix $U$ and scaling by the eigenvalues, we reparameterize
+the spline functions $B_j(x_j)$, mathematically $$
 B_j(x_j) = B_j^0(x_j) + B_j^\tp (x_j) = \beta_j X^0_j + \bs {\beta_j^\tp}^T \bs X_j^\tp.
-$$
-The design matrix after reparameterization is $\bs X_j \equiv \begin{bmatrix} X_j^0 : \bs X_j^{\tp} \end{bmatrix}$; the corresponding coefficient vector is $\bs \beta_j \equiv \begin{bmatrix} \beta_j : \bs \beta^\tp_j \end{bmatrix}$ is an augmentation of the coefficient scalar $\beta_j$ of linear space and the coefficient vector $\bs \beta^\tp_j$ of non-linear space. The dimension for $\bs X_j^{\tp}$ and $\bs \beta^\tp_j$ is $K_j$. The reparameterization allows the coefficients to be on the same scale and encourages separate prior on the linear and nonlinear spaces, which motivates the proposed two-part prior.
+$$ The design matrix after reparameterization is
+$\bs X_j \equiv \begin{bmatrix} X_j^0 : \bs X_j^{\tp} \end{bmatrix}$;
+the corresponding coefficient vector is
+$\bs \beta_j \equiv \begin{bmatrix} \beta_j : \bs \beta^\tp_j \end{bmatrix}$
+is an augmentation of the coefficient scalar $\beta_j$ of linear space
+and the coefficient vector $\bs \beta^\tp_j$ of non-linear space. The
+dimension for $\bs X_j^{\tp}$ and $\bs \beta^\tp_j$ is $K_j$. The
+reparameterization allows the coefficients to be on the same scale and
+encourages separate prior on the linear and nonlinear spaces, which
+motivates the proposed two-part prior.
 
 \subsection{Two-part Spike-and-slab LASSO Prior for Spline Functions}
 
-To simultaneously address signal sparsity and function smoothness, we propose the two-part spike-and-slab LASSO prior under the additive Cox proportional hazards framework. The proposed prior is an extension of the previous spike-and-slab LASSO prior for group predictors \cite{tang2019}, and has been applied to the generalized additive model framework\cite{guo2022}. The proposed prior provides three-folded advantages: 1) data-driven estimation of function smoothness via adaptive shrinkage to improve prediction accuracy; 2) natural bi-level selection of spline functions without hypothesis testing or thresholding; 3) efficient model fitting with a scalable algorithm.
+To simultaneously address signal sparsity and function smoothness, we
+propose the two-part spike-and-slab LASSO prior under the additive Cox
+proportional hazards framework. The proposed prior is an extension of
+the previous spike-and-slab LASSO prior for group predictors
+\cite{tang2019}, and has been applied to the generalized additive model
+framework\cite{guo2022}. The proposed prior provides three-folded
+advantages: 1) data-driven estimation of function smoothness via
+adaptive shrinkage to improve prediction accuracy; 2) natural bi-level
+selection of spline functions without hypothesis testing or
+thresholding; 3) efficient model fitting with a scalable algorithm.
 
-To recall, the spike-and-slab LASSO prior \cite{rockova2018a, rockova2018b} is a mixture double exponential prior with a spike density $DE(0, s_0)$ for small effects and a slab density $DE(0, s_1)$ for large effect ($0 < s_0 < s_1$). The scale parameters $s_0$ and $s_1$ are considered given and can be optimized via cross-validation. A latent indicator variable $\gamma \in \{0,1\}$ controls if the predictor is included in the model. Mathematically, the spike-and-slab LASSO prior is expressed as $$
+To recall, the spike-and-slab LASSO prior
+\cite{rockova2018a, rockova2018b} is a mixture double exponential prior
+with a spike density $DE(0, s_0)$ for small effects and a slab density
+$DE(0, s_1)$ for large effect ($0 < s_0 < s_1$). The scale parameters
+$s_0$ and $s_1$ are considered given and can be optimized via
+cross-validation. A latent indicator variable $\gamma \in \{0,1\}$
+controls if the predictor is included in the model. Mathematically, the
+spike-and-slab LASSO prior is expressed as $$
 \beta|\gamma \sim (1-\gamma) DE(0, s_0) + \gamma DE(0, s_1), 0 < s_0 < s_1.
-$$ To accommodate any group structures of predictors, \cite{tang2018, tang2019} proposed the group spike-and-slab LASSO prior by imposing a group specific Bernoulli distribution on the latent indicator variables $\gamma_j$ of variable $X_j$ that belongs to the group $g$, $$
+$$ To accommodate any group structures of predictors,
+\cite{tang2018, tang2019} proposed the group spike-and-slab LASSO prior
+by imposing a group specific Bernoulli distribution on the latent
+indicator variables $\gamma_j$ of variable $X_j$ that belongs to the
+group $g$, $$
 \gamma_j|\theta_g \sim Bin(1, \theta_g), j \in g.
-$$ The probability parameter $\theta_g$ of group $g$ allows information borrowing across different predictors in the same group. The group variant of spike-and-slab LASSO is built on the premise that if one predictor in the group is included in the model, the rest of the predictors are more likely to be in the model. 
+$$ The probability parameter $\theta_g$ of group $g$ allows information
+borrowing across different predictors in the same group. The group
+variant of spike-and-slab LASSO is built on the premise that if one
+predictor in the group is included in the model, the rest of the
+predictors are more likely to be in the model.
 
 <!-- The spike-and-slab LASSO prior can be seen as a special case of the group spike-and-slab LASSO prior where the size of each group is one. -->
 
-In the proposed two-part spike-and-slab LASSO prior for spline function, we modify the previous group spike-and-slab LASSO prior to allow group-wise latent indicator and enforce effect hierarchy principle \cite{chipman2006}. Firstly, we impose conditionally independent group SSLs on the linear and nonlinear components of a spline function to account the natural group structure of spline bases. Given the reparameterized model matrix of the spline function $B_j(x_j)$, we have the linear and nonlinear component $X_j^0$ and ${\bs X_j}^\tp$. We impose the group SSL priors \footnote{We treat the spike-and-slab LASSO prior as a special case of the group spike-and-slab LASSO prior with group size of one.} on the corresponding linear and nonlinear coefficients,  $\beta_j$ and $\bs \beta_j^\tp$ respectively, \begin{align}
+In the proposed two-part spike-and-slab LASSO prior for spline function,
+we modify the previous group spike-and-slab LASSO prior to allow
+group-wise latent indicator and enforce effect hierarchy principle
+\cite{chipman2006}. Firstly, we impose conditionally independent group
+SSLs on the linear and nonlinear components of a spline function to
+account the natural group structure of spline bases. Given the
+reparameterized model matrix of the spline function $B_j(x_j)$, we have
+the linear and nonlinear component $X_j^0$ and ${\bs X_j}^\tp$. We
+impose the group SSL priors
+\footnote{We treat the spike-and-slab LASSO prior as a special case of the group spike-and-slab LASSO prior with group size of one.}
+on the corresponding linear and nonlinear coefficients, $\beta_j$ and
+$\bs \beta_j^\tp$ respectively, \begin{align}
   \beta_{j} | \gamma_{j},s_0,s_1 &\sim (1-\gamma_{j}) DE(0, s_0) + \gamma_{j} DE(0, s_1)\nonumber \\
   \beta^\tp_{jk} | \gamma^\tp_{j},s_0,s_1 &\simiid (1-\gamma_{j}^\tp) DE(0, s_0) + \gamma_{j}^\tp DE(0, s_1), k=1,\dots, K_j.
-\end{align} To note, we make slight modification from the original group SSL \cite{tang2018, tang2019}: we have all the nonlinear coefficients $\beta^\tp_{jk}$ share the same group latent binary indicator $\gamma^\tp_{j}$. This modification encourages the inclusion of the nonlinear component altogether, instead of a subset of nonlinear bases as the original group SSL would. It results a more reasonable solution to the bi-level selection problem. Meanwhile, because of the scaling in the reparameterization process, all the nonlinear coefficients have the same magnitude of shrinkage. Hence, these coefficients can be sampled independently from the identical mixture double exponential distribution. Overall, the modify group spike-and-slab prior for the nonlinear component can be seen as a Bayesian formulation of the smoothing penalty.
+\end{align} To note, we make slight modification from the original group
+SSL \cite{tang2018, tang2019}: we have all the nonlinear coefficients
+$\beta^\tp_{jk}$ share the same group latent binary indicator
+$\gamma^\tp_{j}$. This modification encourages the inclusion of the
+nonlinear component altogether, instead of a subset of nonlinear bases
+as the original group SSL would. It results a more reasonable solution
+to the bi-level selection problem. Meanwhile, because of the scaling in
+the reparameterization process, all the nonlinear coefficients have the
+same magnitude of shrinkage. Hence, these coefficients can be sampled
+independently from the identical mixture double exponential
+distribution. Overall, the modify group spike-and-slab prior for the
+nonlinear component can be seen as a Bayesian formulation of the
+smoothing penalty.
 
-While the two latent indicators $\gamma_j$ and $\gamma_j^\tp$ controls the inclusion of the linear and nonlinear components of a spline function, we still need to set up some ordering of the inclusion. For example, it is often assumed that the lower-order effects are more likely to be active than the high-reorder effects. This assumption is previously referred to as \textit{effect hierachy} \cite{chipman2006}). In order to implement the effect hierarchy principle in the bi-level selection, we further impose a dependent structure on the latent indicators, \begin{align}
+While the two latent indicators $\gamma_j$ and $\gamma_j^\tp$ controls
+the inclusion of the linear and nonlinear components of a spline
+function, we still need to set up some ordering of the inclusion. For
+example, it is often assumed that the lower-order effects are more
+likely to be active than the high-reorder effects. This assumption is
+previously referred to as \textit{effect hierachy} \cite{chipman2006}).
+In order to implement the effect hierarchy principle in the bi-level
+selection, we further impose a dependent structure on the latent
+indicators, \begin{align}
 &\gamma_{j} | \theta_j \sim Bin(1, \theta_j) & & 
 &\gamma_{j}^\tp | \gamma_{j}, \theta_j \sim Bin(1, \gamma_{j}\theta_j).
-\end{align}
-This is, the inclusion of the nonlinear component depends on the inclusion of the linear component. When the linear component is selected in the model, the nonlinear component has the probability of $\theta_j$ to enter the model; when the linear component is not selected in the model, the nonlinear component won't enter the model either. To note, one can easily relax the effect hierarchy principle by having $\gamma$ and $\gamma^\tp$ be conditionally independent. The two set-ups of the indicator prior could introduce trade-offs regarding variable selection performance \cite{guo2022} and will be discussed more in the Section 5. 
+\end{align} This is, the inclusion of the nonlinear component depends on
+the inclusion of the linear component. When the linear component is
+selected in the model, the nonlinear component has the probability of
+$\theta_j$ to enter the model; when the linear component is not selected
+in the model, the nonlinear component won't enter the model either. To
+note, one can easily relax the effect hierarchy principle by having
+$\gamma$ and $\gamma^\tp$ be conditionally independent. The two set-ups
+of the indicator prior could introduce trade-offs regarding variable
+selection performance \cite{guo2022} and will be discussed more in the
+Section 5.
 
 <!-- It is also possible to have the linear and nonlinear coefficients shares the same indicators, i.e. $\gamma = \gamma^\tp$. However, this approach would disable the bi-level selection ability and reduce to a more strict version of group spike-and-slab LASSO where all coefficients in a group employs the same shrinkage instead of locally adaptive shrinkage for linear effect and nonlinear effects respectively, and hence it is not recommend here. -->
 
-The rest of the proposed prior follows the spike-and-slab LASSO prior. The inclusion probability parameter $\theta_j$ independently and identically follows a $Beta(a, b)$ distribution. One can consider a special case of the $Beta$ distribution, $Uniform(0,1)$, for simplicity. The prior distribution of the inclusion probability parameter motivates a data-driven approach to establish adaptive shrinkage, accommodating various degrees of function smoothness. Meanwhile, the hyperprior carries the information borrowing trait from the group spike-and-slab LASSO prior: when a variable has large effects in any of its bases, the parameter $\theta_j$ will be estimated large, which in turn encourages the model to include the rest of bases. In addition, being a conjugate prior of the binomial distribution, the $Beta$ prior can provide a closed-form solution in the following model fitting algorithm and mitigate some computational burdens. 
+The rest of the proposed prior follows the spike-and-slab LASSO prior.
+The inclusion probability parameter $\theta_j$ independently and
+identically follows a $Beta(a, b)$ distribution. One can consider a
+special case of the $Beta$ distribution, $Uniform(0,1)$, for simplicity.
+The prior distribution of the inclusion probability parameter motivates
+a data-driven approach to establish adaptive shrinkage, accommodating
+various degrees of function smoothness. Meanwhile, the hyperprior
+carries the information borrowing trait from the group spike-and-slab
+LASSO prior: when a variable has large effects in any of its bases, the
+parameter $\theta_j$ will be estimated large, which in turn encourages
+the model to include the rest of bases. In addition, being a conjugate
+prior of the binomial distribution, the $Beta$ prior can provide a
+closed-form solution in the following model fitting algorithm and
+mitigate some computational burdens.
 
 \subsection{EM-Coordinate Descent Algorithm for Scalable Model Fitting}
 
-Markov chain Mote Carlo (MCMC) algorithms are a natural choice to fit Bayesian hierarchical models whose solutions are not analytically tractable. However, due to their computationally prohibitive nature, MCMC algorithms bottleneck the scalability of Bayesian hierarchical models and limit the applicability in high-dimensional data analysis. Recent high-dimensional Bayesian research develops emphasis on economic alternative model fitting algorithm. Among which are the optimization-based algorithms, e.g. EM procedure, to derive the maximum a posteriori estimates, previously seen in \cite{bai2021, guo2022} for Bayesian generalized additive models. Nevertheless, these algorithms do not apply to the additive Cox model.
+Markov chain Mote Carlo (MCMC) algorithms are a natural choice to fit
+Bayesian hierarchical models whose solutions are not analytically
+tractable. However, due to their computationally prohibitive nature,
+MCMC algorithms bottleneck the scalability of Bayesian hierarchical
+models and limit the applicability in high-dimensional data analysis.
+Recent high-dimensional Bayesian research develops emphasis on economic
+alternative model fitting algorithm. Among which are the
+optimization-based algorithms, e.g. EM procedure, to derive the maximum
+a posteriori estimates, previously seen in \cite{bai2021, guo2022} for
+Bayesian generalized additive models. Nevertheless, these algorithms do
+not apply to the additive Cox model.
 
-In this section, we describe a fast and deterministic algorithm to fit the proposed spike-and-slab LASSO additive Cox model. The algorithm is an extension of the previously proposed EM-coordinate descent algorithm for group spike-and-slab LASSO Cox \cite{tang2019}. Specifically, we first write the spike-and-slab LASSO prior as a double exponential prior with a conditional scale parameter. Next, we formulate the double exponential prior as LASSO penalty, which can be optimize via the efficient coordinate descent algorithm \cite{simon2011}. Some nuisance parameters are required but unknown to derive the objective function. Instead, we optimize the expectation of the objective function with respect to these nuisance parameters. The optimization process is implemented via iterative steps until convergence, commonly referred to as the Expectation-Maximization procedure. We previously see that similar strategies achieve great computational convenience compared to versions of Monte Carlo Markov Chain algorithms in the high-dimensional data analysis literature, for example \cite{rockova2014, tang2017, guo2022} to name a few.
+In this section, we describe a fast and deterministic algorithm to fit
+the proposed spike-and-slab LASSO additive Cox model. The algorithm is
+an extension of the previously proposed EM-coordinate descent algorithm
+for group spike-and-slab LASSO Cox \cite{tang2019}. Specifically, we
+first write the spike-and-slab LASSO prior as a double exponential prior
+with a conditional scale parameter. Next, we formulate the double
+exponential prior as LASSO penalty, which can be optimize via the
+efficient coordinate descent algorithm \cite{simon2011}. Some nuisance
+parameters are required but unknown to derive the objective function.
+Instead, we optimize the expectation of the objective function with
+respect to these nuisance parameters. The optimization process is
+implemented via iterative steps until convergence, commonly referred to
+as the Expectation-Maximization procedure. We previously see that
+similar strategies achieve great computational convenience compared to
+versions of Monte Carlo Markov Chain algorithms in the high-dimensional
+data analysis literature, for example
+\cite{rockova2014, tang2017, guo2022} to name a few.
 
-In the proposed algorithm, our objective is to find the parameters of interests $\Theta = \{\bs \beta, \bs \theta\}$ that maximize the log joint posterior density of $\Theta, \bs \gamma$. In Bayesian survival analysis, it is common to approximate posterior density with the product of partial likelihood function in Equation \eqref{eq:partial-likelihood} and marginal priors. \cite{sinha2003} Hence, our objective function (up to additive constants) is expressed mathematically, 
-$$
+In the proposed algorithm, our objective is to find the parameters of
+interests $\Theta = \{\bs \beta, \bs \theta\}$ that maximize the log
+joint posterior density of $\Theta, \bs \gamma$. In Bayesian survival
+analysis, it is common to approximate posterior density with the product
+of partial likelihood function in Equation \eqref{eq:partial-likelihood}
+and marginal priors. \cite{sinha2003} Hence, our objective function (up
+to additive constants) is expressed mathematically, $$
 \max\limits_{\Theta, \bs \gamma} \log f(\bs\beta, \bs \theta, \bs \gamma |t, d) = Q_1(\bs \beta) + Q_2(\bs \gamma, \bs \theta),
-$$
-where
-$$
+$$ where $$
 Q_1 \equiv Q_1(\bs \beta) = 
 pl(\bs \beta)+ \sum\limits_{j=1}^p\left[\log f(\beta_j|\gamma_j)+\sum\limits_{k=1}^{K_j} \log f(\beta^{\tp}_{jk}|\gamma^{\tp}_{j})\right],
-$$
-and 
-$$
+$$ and $$
 Q_2 \equiv Q_2(\bs \gamma, \bs \theta) = \sum\limits_{j=1}^{p} \left[ (\gamma_j+\gamma_{j}^{\tp})\log \theta_j + (2-\gamma_j-\gamma_{j}^{\tp}) \log (1-\theta_j)\right] + \sum\limits_{j=1}^{p}\log f(\theta_j).
 $$
 
-Given the latent inclusion indicator is binary and takes only 0 and 1 as its value, a spike-and-slab LASSO prior, as well as its group variant, can be expressed as a double exponential prior whose scale parameter is $s_0$ when $\gamma = 0$ and $s_1$ when $\gamma = 1$, with the density function
-$$
+Given the latent inclusion indicator is binary and takes only 0 and 1 as
+its value, a spike-and-slab LASSO prior, as well as its group variant,
+can be expressed as a double exponential prior whose scale parameter is
+$s_0$ when $\gamma = 0$ and $s_1$ when $\gamma = 1$, with the density
+function $$
 f(\beta|\gamma) = \frac{1}{2[(1-\gamma)s_0 + \gamma s_1]}\exp(-\frac{|\beta|}{(1-\gamma)s_0 + \gamma s_1})
-$$
-Leveraging the relationship between double exponential prior and LASSO penalty, $Q_1$, the product of partial likelihood function and the prior of $\bs \beta$, can be viewed as an $l_1$ penalized partial likelihood function with penalty parameters $\lambda_j = \{(1-\gamma_{j}) s_0 + \gamma_{j} s_1\}^{-1}$ and $\lambda_j^\tp = \{(1-\gamma_{j}^\tp) s_0 + \gamma_{j}^\tp s_1\}^{-1}$ for $\beta_j$ and $\beta_{jk}^\tp$ respectively. This penalized partial likelihood function can be optimized with the coordinate descent algorithm \cite{simon2011} if with the knowledge of $\bs \gamma$. Similarly, $Q_2$, the prior of $\bs \gamma$ and $\bs \theta$, can be seen as an posterior density function of $\bs \theta$ if $\bs \gamma$ is known and considered data points, and optimized via beta-binomial conjugate relationship. In addition, conditioning on $\bs \gamma$, $Q_1$ and $Q_2$ are independent and can be optimized piece-wise. Nevertheless, the latent indicators $\bs \gamma$ are unknown and the objective function can not be maximized directly.
+$$ Leveraging the relationship between double exponential prior and
+LASSO penalty, $Q_1$, the product of partial likelihood function and the
+prior of $\bs \beta$, can be viewed as an $l_1$ penalized partial
+likelihood function with penalty parameters
+$\lambda_j = \{(1-\gamma_{j}) s_0 + \gamma_{j} s_1\}^{-1}$ and
+$\lambda_j^\tp = \{(1-\gamma_{j}^\tp) s_0 + \gamma_{j}^\tp s_1\}^{-1}$
+for $\beta_j$ and $\beta_{jk}^\tp$ respectively. This penalized partial
+likelihood function can be optimized with the coordinate descent
+algorithm \cite{simon2011} if with the knowledge of $\bs \gamma$.
+Similarly, $Q_2$, the prior of $\bs \gamma$ and $\bs \theta$, can be
+seen as an posterior density function of $\bs \theta$ if $\bs \gamma$ is
+known and considered data points, and optimized via beta-binomial
+conjugate relationship. In addition, conditioning on $\bs \gamma$, $Q_1$
+and $Q_2$ are independent and can be optimized piece-wise. Nevertheless,
+the latent indicators $\bs \gamma$ are unknown and the objective
+function can not be maximized directly.
 
-To address this problem, we treat the latent indicators $\bs \gamma$ as nuisance parameters and use EM algorithm to iteratively derive the maximum a postiori estimates of $\Theta$. Notably, we establish the expected log joint posterior density of $\{\Theta, \bs \gamma\}$ with respect to the latent indicators $\bs \gamma$. At the $t$-th iteration of the EM procedure, we first calculate $E(\gamma) = \text{Pr}(\gamma=1|\beta, \theta) \equiv p^{(t)}$ and $E(\gamma^\tp) = \text{Pr}(\gamma^\tp=1|\bs \beta^\tp, \theta) \equiv {\text{p}^\tp}^{(t)}$ using the estimate of $\bs \beta, \theta$ from the $t-1$ iteration. To reduce the computation load, we analytically integrate $\gamma$ out of the density function of $\gamma^\tp$ such that $\gamma^\tp|\theta \sim Bin(1, \theta^2)$. We defer the derivation to the Supporting Information. Similarly, we can calculate the penalized parameters $E(\lambda) = (1-\text{p}^{(t)})/{s_0} + \text{p}^{(t)}/{s_1}$ and $E(\lambda^\tp) = (1-{\text{p}^\tp}^{(t)})/{s_0} + {\text{p}^\tp}^{(t)}/{s_1}$. Naturally, we have $E(Q_1)$ and $E(Q_2)$ to be maximized independently. We can update $\bs \beta$ with the coordinate descent algorithm; we can update $\theta_j$ with a closed-form equation thanks to the beta-binomial conjugate relationship, \begin{equation}\label{eq:update_theta}
+To address this problem, we treat the latent indicators $\bs \gamma$ as
+nuisance parameters and use EM algorithm to iteratively derive the
+maximum a postiori estimates of $\Theta$. Notably, we establish the
+expected log joint posterior density of $\{\Theta, \bs \gamma\}$ with
+respect to the latent indicators $\bs \gamma$. At the $t$-th iteration
+of the EM procedure, we first calculate
+$E(\gamma) = \text{Pr}(\gamma=1|\beta, \theta) \equiv p^{(t)}$ and
+$E(\gamma^\tp) = \text{Pr}(\gamma^\tp=1|\bs \beta^\tp, \theta) \equiv {\text{p}^\tp}^{(t)}$
+using the estimate of $\bs \beta, \theta$ from the $t-1$ iteration. To
+reduce the computation load, we analytically integrate $\gamma$ out of
+the density function of $\gamma^\tp$ such that
+$\gamma^\tp|\theta \sim Bin(1, \theta^2)$. We defer the derivation to
+the Supporting Information. Similarly, we can calculate the penalized
+parameters
+$E(\lambda) = (1-\text{p}^{(t)})/{s_0} + \text{p}^{(t)}/{s_1}$ and
+$E(\lambda^\tp) = (1-{\text{p}^\tp}^{(t)})/{s_0} + {\text{p}^\tp}^{(t)}/{s_1}$.
+Naturally, we have $E(Q_1)$ and $E(Q_2)$ to be maximized independently.
+We can update $\bs \beta$ with the coordinate descent algorithm; we can
+update $\theta_j$ with a closed-form equation thanks to the
+beta-binomial conjugate relationship,
+\begin{equation}\label{eq:update_theta}
 \theta_j = \frac{\text{p}_j^{(t)} + {\text{p}_j^\tp}^{(t)} + a - 1 }{a + b}.
 \end{equation}
 
 Totally, the proposed EM-CD algorithm is summarized as follows:
 
-1)  Choose a starting value $\bs \beta^{(0)}$ and $\bs \theta^{(0)}$ for $\bs \beta$ and $\bs \theta$, where the superscription $^{(t)}$ denotes the the parameter estimates at the $t$th iteration. For example, we can initialize $\bs \beta^{(0)} = \bs 0$ and $\bs \theta^{(0)} = \bs 0.5$
+1)  Choose a starting value $\bs \beta^{(0)}$ and $\bs \theta^{(0)}$ for
+    $\bs \beta$ and $\bs \theta$, where the superscription $^{(t)}$
+    denotes the the parameter estimates at the $t$th iteration. For
+    example, we can initialize $\bs \beta^{(0)} = \bs 0$ and
+    $\bs \theta^{(0)} = \bs 0.5$
 
 2)  Iterate over the E-step and M-step
 
-    E-step: calculate $E(\gamma_{j})$, $E(\gamma^\tp_{j})$ and $E(\lambda_j)$, $E(\lambda^\tp_j)$ with estimates of $\Theta^{(t-1)}$ from previous iteration
+    E-step: calculate $E(\gamma_{j})$, $E(\gamma^\tp_{j})$ and
+    $E(\lambda_j)$, $E(\lambda^\tp_j)$ with estimates of
+    $\Theta^{(t-1)}$ from previous iteration
 
     M-step:
 
-    a)  Update $\bs \beta^{(t)}$ by optimizing the penalized likelihood function $E(Q_1)$ using the coordinate descent algorithm
+    a)  Update $\bs \beta^{(t)}$ by optimizing the penalized likelihood
+        function $E(Q_1)$ using the coordinate descent algorithm
 
-    b)  Update $\bs \theta^{(t)}$ using the closed-form calculation in Equation \eqref{eq:update_theta}
-    
-    The E- and M- steps iterate until meeting the convergence criterion $|d^{(t)}-d^{(t-1)}|/(0.1+|d^{(t)}|)<\epsilon$, where $d^{(t)} = -2pl(\bs \beta^{(t)})$ and $\epsilon$ is a small value (say $10^{-5}$)
+    b)  Update $\bs \theta^{(t)}$ using the closed-form calculation in
+        Equation \eqref{eq:update_theta}
+
+    The E- and M- steps iterate until meeting the convergence criterion
+    $|d^{(t)}-d^{(t-1)}|/(0.1+|d^{(t)}|)<\epsilon$, where
+    $d^{(t)} = -2pl(\bs \beta^{(t)})$ and $\epsilon$ is a small value
+    (say $10^{-5}$)
 
 \subsubsection{Selecting Optimal Scale Values}
 
-In the proposed two-part spike-and-slab LASSO prior, we assume the scale parameters $s_0, s_1$ known. As the model performance depends on the values of the two scale parameters, we use cross-validation with respect to a criteria of preference, for example the the partial log-likelihood, concordance index, the survival curves, or the survival prediction error, to decide their optimal values. Meanwhile, previous research showed the value of the slab scale $s_1$ has less impact on the final model and is recommended to be set as a generally large value, e.g. $s_1 = 0.5$, that provides no or weak shrinkage. \cite{tang2019} Hence, instead of constructing a two-dimensional grid, we focus on examining different values of the spike scale $s_0$. Similar to the LASSO implementation in the widely used R package \texttt{glmnet}, we examine a sequence of models with different $s_0$ values and have users to choose from.
+In the proposed two-part spike-and-slab LASSO prior, we assume the scale
+parameters $s_0, s_1$ known. As the model performance depends on the
+values of the two scale parameters, we use cross-validation with respect
+to a criteria of preference, for example the the partial log-likelihood,
+concordance index, the survival curves, or the survival prediction
+error, to decide their optimal values. Meanwhile, previous research
+showed the value of the slab scale $s_1$ has less impact on the final
+model and is recommended to be set as a generally large value, e.g.
+$s_1 = 0.5$, that provides no or weak shrinkage. \cite{tang2019} Hence,
+instead of constructing a two-dimensional grid, we focus on examining
+different values of the spike scale $s_0$. Similar to the LASSO
+implementation in the widely used R package \texttt{glmnet}, we examine
+a sequence of models with different $s_0$ values and have users to
+choose from.
