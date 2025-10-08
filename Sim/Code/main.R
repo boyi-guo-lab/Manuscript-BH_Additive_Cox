@@ -32,9 +32,10 @@ library(simsurv)
 library(glmnet)
 
 ## Helper Functions
-source("~/Manuscript-BH_Additive_Cox/Sim/Code/find_censor_parameter.R")
-source("~/Manuscript-BH_Additive_Cox/Sim/Code/create_HD_formula.R")
-source("~/Manuscript-BH_Additive_Cox/Sim/Code/make_null_res.R")
+ source("~/Manuscript-BH_Additive_Cox/Sim/Code/find_censor_parameter.R")
+ source("~/Manuscript-BH_Additive_Cox/Sim/Code/create_HD_formula.R")
+ source("~/Manuscript-BH_Additive_Cox/Sim/Code/make_null_res.R")
+
 
 
 # Data Generating Process -------------------------------------------------
@@ -73,8 +74,9 @@ scale.c <- tryCatch({
 error = function(err) {
   if(!file.exists("~/Manuscript-BH_Additive_Cox/Sim/Code/scale_vec.RDS"))
     stop("Please Generate scale_vec, and use 'R/calculate_scales' to generates scale_vec.RDS")
-  scale_vec <- readRDS("~/Manuscript-BH_Additive_Cox/Sim/Code/scale_vec.RDS")
-  scale.c <- scale_vec[[job_name]]
+  #scale_vec <- readRDS("~/Manuscript-BH_Additive_Cox/Sim/Code/scale_vec.RDS")
+  #scale.c <- scale_vec[[job_name]]
+  scale.c <- scale_vec[["bcam_sim_p=10,rho=0.5,pi_cns=0.3"]]
   if(is.null(scale.c)) stop("No scale for this scenario")
   return(scale.c)
 })
