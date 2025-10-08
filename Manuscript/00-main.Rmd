@@ -3,9 +3,13 @@ title: Spike-and-Slab LASSO Additive Cox Model for High-dimensional Survival Pre
 authors:
 - name: Boyi Guo
   thanks: Corresponding authors \\email{boyiguo1@uab.edu}
-  department: Department of Biostatistics
-  affiliation: University of Alabama at Birmingham
-  location: Birmingham, AL
+  department: Department of Population Helath Sciences
+  affiliation: University of Utah
+  location: Salt Lake City, UT
+- name: Sophia Huebler
+  department: Department of Population Helath Sciences
+  affiliation: University of Utah
+  location: Salt Lake City, UT
 - name: Byron C. Jaeger
   department: Department of Biostatistics and Data Science
   affiliation: Wake Forest School of Medicine
