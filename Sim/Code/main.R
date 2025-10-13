@@ -365,7 +365,9 @@ ret <- list(
   bam_select = bamlasso_vs_part
 )
 
+out_dir <- if (exists("resPath")) resPath else "~/Manuscript-BH_Additive_Cox/Sim/Res"
+saveRDS(ret, file.path(out_dir, sprintf("it_%s.rds", it)))
 
 # Recommendation: to save the results in individual rds files
-saveRDS(ret,
-        paste0("/data/user/boyiguo1/bcam/Res/", job_name,"/it_",it,".rds"))
+#saveRDS(ret,
+#        paste0("/data/user/boyiguo1/bcam/Res/", job_name,"/it_",it,".rds"))
