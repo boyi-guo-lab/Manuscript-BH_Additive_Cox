@@ -181,6 +181,18 @@
       "Hash": "2288423bb0f20a457800d7fc47f6aa54",
       "Requirements": []
     },
+    "argparse": {
+      "Package": "argparse",
+      "Version": "2.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5c42265e4856b77ead537005ec91bf9f",
+      "Requirements": [
+        "R6",
+        "findpython",
+        "jsonlite"
+      ]
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.1",
@@ -692,6 +704,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "aa5e1cd11c2d15497494c5292d7ffcc8",
+      "Requirements": []
+    },
+    "findpython": {
+      "Package": "findpython",
+      "Version": "1.0.9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "70b7b487debe0157a37cf6610cf8489c",
       "Requirements": []
     },
     "fontawesome": {

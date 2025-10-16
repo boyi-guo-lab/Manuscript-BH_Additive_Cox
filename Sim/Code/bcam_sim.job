@@ -1,51 +1,40 @@
 #!/bin/bash
-#SBATCH --account=guo
-#SBATCH --partition=lonepeak-shared
+#SBATCH --mail-type="END,FAIL"
+#SBATCH --mail-user=sophhuebler@gmail.com
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=sophhuebler@gmail.com
-# NOTE: array/time/mem are set from start_sim.R via CLI flags; you can change them there.
-# SBATCH --time=2:00:00
-# SBATCH --time=12:00:00
-# SBATCH --mem-per-cpu=5000
 
+# NOTE: account/partition/array/time/mem are set from start_sim.R 
+# SBATCH --account=guo
+# SBATCH --partition=lonepeak-shared
+# SBATCH --time=2:00:00
+# SBATCH --mem-per-cpu=5000
+# SBATCH --cpus-per-task=1
 
 set -euo pipefail
 
 # ---- Modules ----
 module purge
 module load R/4.4.2
-module load GLPK   # keep for now; remove if module not needed/available
+
+# ---- Set up project root ----
+PROJECT_ROOT="$HOME/Documents/SSL/Manuscript-BH_Additive_Cox"
 
 
-
-# ---- Paths from --export (with safe defaults to repo) ----
-resPath="${resPath:-$HOME/Manuscript-BH_Additive_Cox/Sim/Res/$SLURM_JOB_NAME}"
-scalePath="${scalePath:-$HOME/Manuscript-BH_Additive_Cox/Sim/scale/$SLURM_JOB_NAME}"
-logPath="${logPath:-$HOME/Manuscript-BH_Additive_Cox/Sim/Log/$SLURM_JOB_NAME}"
-
+# ---- Paths from --export  ----
 mkdir -p "$resPath" "$scalePath" "$logPath"
 
 # ---- Project root (so .Rprofile can auto-activate renv) ----
-cd "$HOME/Manuscript-BH_Additive_Cox"
+cd "$PROJECT_ROOT"
+  
 
 
-echo "==== Job context ========================================"
-echo "Date/time:         $(date)"
-echo "Host:              $(hostname)"
-echo "Job Name:          ${SLURM_JOB_NAME}"
-echo "Job ID:            ${SLURM_JOB_ID}"
-echo "Array Task ID:     ${SLURM_ARRAY_TASK_ID:-1}"
-echo "resPath:           ${resPath}"
-echo "scalePath:         ${scalePath}"
-echo "logPath:           ${logPath}"
-echo "========================================================="
-
-
-# ---- Run your R pipeline (Rscript allows .Rprofile -> renv to activate) ----
+# ---- Run your R pipeline ----
 Rscript Sim/Code/main.R \
-  n_train="${n_train}" p="${p}" rho="${rho}" pi_cns="${pi_cns}" \
-  resPath="${resPath}" scalePath="${scalePath}" \
+  --n_train ${n_train} \
+  --p ${p} \
+  --rho ${rho} \
+  --pi_cns ${pi_cns} \
+  --resPath "${resPath}" \
+  --scalePath "${scalePath}" \
   > "${logPath}/task_${SLURM_ARRAY_TASK_ID:-1}.Rout" 2>&1

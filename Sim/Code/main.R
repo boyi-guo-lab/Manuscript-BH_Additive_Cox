@@ -8,15 +8,45 @@
 # rho <- c(0, 0.5)[2]
 # pi_cns <- c(0.15, 0.3, 0.4)[2]
 
-args=(commandArgs(TRUE))
+library(argparse)
+parser <- ArgumentParser(description="Run a simulation study")
 
-if(length(args)==0){
-  print("No arguments supplied.")
-}else{
-  for(i in 1:length(args)){
-    eval(parse(text=args[[i]]))
-  }
-}
+parser$add_argument("-n", "--n_train", type="integer", default=200,
+                    help="Number of training samples")
+
+parser$add_argument("-p", "--p", type="integer", default=10,
+                    help="Number of predictors")
+
+parser$add_argument("-r", "--rho", type="double", default=0.5,
+                    help="Correlation parameter")
+
+parser$add_argument("-c", "--pi_cns", type="double", default=0.1,
+                    help="Censoring proportion")
+
+parser$add_argument("--resPath", type="character", required=TRUE,
+                    help="Path to save results files")
+
+parser$add_argument("--scalePath", type="character", required=TRUE,
+                    help="Path to save scaling info")
+
+
+args <- parser$parse_args()
+n_train <- args$n_train
+p <- args$p
+rho <- args$rho
+pi_cns <- args$pi_cns
+resPath <- args$resPath
+scalePath <- args$scalePath
+
+#args=(commandArgs(TRUE))
+#
+#if(length(args)==0){
+#  print("No arguments supplied.")
+#}else{
+#  for(i in 1:length(args)){
+#    eval(parse(text=args[[i]]))
+#  }
+#}
 
 
 
@@ -32,15 +62,15 @@ library(simsurv)
 library(glmnet)
 
 ## Helper Functions
- source("~/Manuscript-BH_Additive_Cox/Sim/Code/find_censor_parameter.R")
- source("~/Manuscript-BH_Additive_Cox/Sim/Code/create_HD_formula.R")
- source("~/Manuscript-BH_Additive_Cox/Sim/Code/make_null_res.R")
+ source("Sim/Code/find_censor_parameter.R")
+ source("Sim/Code/create_HD_formula.R")
+ source("Sim/Code/make_null_res.R")
 
 
 
 # Data Generating Process -------------------------------------------------
 # * Simulation Parameters -------------------------------------------------
-source("~/Manuscript-BH_Additive_Cox/Sim/Code/sim_pars_funs.R")
+source("Sim/Code/sim_pars_funs.R")
 
 ## Job Name
 job_name <- Sys.getenv('SLURM_JOB_NAME')
@@ -72,9 +102,9 @@ scale.c <- tryCatch({
                         shape_hazard = shape.t, shape_censor = shape.c)
 },
 error = function(err) {
-  if(!file.exists("~/Manuscript-BH_Additive_Cox/Sim/Code/scale_vec.RDS"))
+  if(!file.exists("Sim/Code/scale_vec.RDS"))
     stop("Please Generate scale_vec, and use 'R/calculate_scales' to generates scale_vec.RDS")
-  #scale_vec <- readRDS("~/Manuscript-BH_Additive_Cox/Sim/Code/scale_vec.RDS")
+  #scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
   #scale.c <- scale_vec[[job_name]]
   scale.c <- scale_vec[["bcam_sim_p=10,rho=0.5,pi_cns=0.3"]]
   if(is.null(scale.c)) stop("No scale for this scenario")
@@ -365,7 +395,7 @@ ret <- list(
   bam_select = bamlasso_vs_part
 )
 
-out_dir <- if (exists("resPath")) resPath else "~/Manuscript-BH_Additive_Cox/Sim/Res"
+out_dir <- if (exists("resPath")) resPath else "Sim/Res"
 saveRDS(ret, file.path(out_dir, sprintf("it_%s.rds", it)))
 
 # Recommendation: to save the results in individual rds files
