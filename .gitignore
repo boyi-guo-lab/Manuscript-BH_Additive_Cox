@@ -38,5 +38,5 @@ _targets/
 start_sim.Rout
 
 
-Sim/Res*
-sim_data/
+#Sim/Res*
+#sim_data/
