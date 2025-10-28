@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 
-# NOTE: account/partition/array/time/mem are set from start_sim.R 
+# NOTE: account/partition/array/time/mem are set from start_sim.R
 # SBATCH --account=guo
 # SBATCH --partition=lonepeak-shared
 # SBATCH --time=2:00:00
@@ -26,11 +26,11 @@ mkdir -p "$resPath" "$scalePath" "$logPath"
 
 # ---- Project root (so .Rprofile can auto-activate renv) ----
 cd "$PROJECT_ROOT"
-  
+
 
 
 # ---- Run your R pipeline ----
-Rscript Sim/Code/main.R \
+Rscript Sim/Code/main_R_parallelized.R \
   --n_train ${n_train} \
   --p ${p} \
   --rho ${rho} \
