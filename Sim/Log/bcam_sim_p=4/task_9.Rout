@@ -59,49 +59,7 @@ Loading required package: iterators
 Create formula:
 time ~ s(X1, bs = "cr", k = 10) + s(X2, bs = "cr", k = 10) + 
     s(X3, bs = "cr", k = 10) + s(X4, bs = "cr", k = 10)
-<environment: 0xb602668>
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.003 minutes 
+<environment: 0x13eeb480>
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
  Cross-validation time: 0.003 minutes 
@@ -120,46 +78,59 @@ Fitting ncv*nfolds = 5 models:
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
  Cross-validation time: 0.003 minutes 
-Warning messages:
-1: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-2: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
-3: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-4: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
-5: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-6: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
-7: UNRELIABLE VALUE: Future (<unnamed-1>) unexpectedly generated random numbers without specifying argument 'seed'. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, specify 'seed=TRUE'. This ensures that proper, parallel-safe random numbers are produced. To disable this check, use 'seed=NULL', or set option 'future.rng.onMisuse' to "ignore". 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Warning message:
+UNRELIABLE VALUE: Future (<unnamed-1>) unexpectedly generated random numbers without specifying argument 'seed'. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, specify 'seed=TRUE'. This ensures that proper, parallel-safe random numbers are produced. To disable this check, use 'seed=NULL', or set option 'future.rng.onMisuse' to "ignore". 
 Create formula:
 time ~ s(X1, bs = "cr", k = 10) + s(X2, bs = "cr", k = 10) + 
     s(X3, bs = "cr", k = 10) + s(X4, bs = "cr", k = 10)
-Warning messages:
-1: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-2: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
-3: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-4: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
-Warning messages:
-1: from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned 
-2: In getcoef(fit, nvars, nx, vnames) :
-  an empty model has been returned; probably a convergence issue
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
+ Cross-validation time: 0.003 minutes 
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
-Fitting ncv*nfolds = 5 models: 
-1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
+ Cross-validation time: 0.003 minutes 
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
  Cross-validation time: 0.002 minutes 
@@ -168,7 +139,16 @@ Fitting ncv*nfolds = 5 models:
  Cross-validation time: 0.003 minutes 
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
- Cross-validation time: 0.002 minutes 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.003 minutes 
 Fitting ncv*nfolds = 5 models: 
 1 2 3 4 5 
  Cross-validation time: 0.003 minutes 
