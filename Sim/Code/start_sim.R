@@ -16,10 +16,10 @@ sim_prmt <- expand.grid(
 # ---- Cluster & job defaults for smoke test ----
 ACCOUNT   <- "guo"
 PARTITION <- "kingspeak"
-ARRAY     <- "1-2"         # 2 reps; bump later for production
-TIME      <- "00:15:00"
-MEM       <- "4G"
-CPUS      <- "1"
+ARRAY     <- "1-10"         # 2 reps; bump later for production
+TIME      <- "00:30:00"
+MEM       <- "16G"
+CPUS      <- "4"
 
 
 
@@ -29,7 +29,7 @@ start.sim <- function(n_train, p, rho, pi_cns) {
                      "rho=", rho, ",",
                      "pi_cns=", pi_cns)
 
-  # R output repos 
+  # R output repos
   res_dir   <- file.path(PROJ_ROOT,  "Manuscript-BH_Additive_Cox", "Sim", "Res",   job.name)
   scale_dir <- file.path(PROJ_ROOT,  "Manuscript-BH_Additive_Cox", "Sim", "scale", job.name)
   log_dir   <- file.path(PROJ_ROOT,  "Manuscript-BH_Additive_Cox", "Sim", "Log",   job.name)
@@ -46,7 +46,7 @@ start.sim <- function(n_train, p, rho, pi_cns) {
   # sbatch command ( pass parameters + paths via --export)
   cmd <- paste(
     "sbatch",
-    paste0("--account=", ACCOUNT),	
+    paste0("--account=", ACCOUNT),
     paste0("--partition=", PARTITION),
     paste0("--array=",     ARRAY),
     paste0("--time=",      TIME),
