@@ -17,9 +17,9 @@ sim_prmt <- expand.grid(
 ACCOUNT   <- "guo"
 PARTITION <- "kingspeak"
 ARRAY     <- "1-10"         # 2 reps; bump later for production
-TIME      <- "00:30:00"
-MEM       <- "16G"
-CPUS      <- "4"
+TIME      <- "00:10:00"
+MEM       <- "4G"
+CPUS      <- "1"
 
 
 
