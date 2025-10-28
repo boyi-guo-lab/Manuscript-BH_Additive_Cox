@@ -14,7 +14,7 @@ sim_prmt <- expand.grid(
 )
 
 # ---- Cluster & job defaults for smoke test ----
-ACCOUNT   <- "guo"
+ACCOUNT   <- "owner-guest"
 PARTITION <- "kingspeak-shared-guest"
 ARRAY     <- "1-10"         # 2 reps; bump later for production
 TIME      <- "00:10:00"
