@@ -61,7 +61,6 @@ library(survival)
 library(simsurv)
 library(glmnet)
 
-
 ## Helper Functions
  source("Sim/Code/find_censor_parameter.R")
  source("Sim/Code/create_HD_formula.R")
@@ -132,24 +131,89 @@ train_dat <-  train_dat %>%
   mutate(time = min(c_time, eventtime)) %>%
   ungroup()
 
-# Set Up Parallelization -------------------------------------------------
 
+
+
+# Parallelization Setup --------------------------------------------------
 library(parallel)
 library(future)
 library(furrr)
 library(doParallel)
 
-
 n_cores <- as.numeric(Sys.getenv("SLURM_CPUS_PER_TASK", unset = 1))
 plan(multisession, workers = n_cores)
 registerDoParallel(cores = n_cores)
+
+
+# Model Wrappers --------------------------------------------------------
+run_lasso <- function(train_dat, test_dat) {
+  mdl <- cv.glmnet(x = data.matrix(train_dat %>% select(starts_with("X"))),
+                   y = train_dat %>% select(time, status) %>% data.matrix,
+                   nfolds = 5, family = "cox", parallel = TRUE)
+  fnl <- glmnet(x = data.matrix(train_dat %>% select(starts_with("X"))),
+                y = train_dat %>% select(time, status) %>% data.matrix,
+                family = "cox", lambda = mdl$lambda.min)
+  list(model = fnl)
+}
+
+run_mgcv <- function(train_dat) {
+  tryCatch({
+    gam(create_HD_formula(time~1, spl_df = mgcv_df), data = train_dat,
+        family = cox.ph(), weight = train_dat$status)
+  }, error = function(e) NULL)
+}
+
+run_cosso <- function(train_dat) {
+  tryCatch({
+    mdl <- cosso(x = train_dat %>% select(starts_with("X")) %>% data.matrix,
+                 y = train_dat %>% select(time, status) %>% data.matrix,
+                 family = "Cox", nbasis = k, scale = FALSE)
+    tune.cosso(mdl, plot.it = FALSE)
+  }, error = function(e) NULL)
+}
+
+run_acosso <- function(train_dat) {
+  tryCatch({
+    wt <- SSANOVAwt(x = train_dat %>% select(starts_with("X")) %>% data.matrix,
+                    y = train_dat %>% select(time, status) %>% data.matrix,
+                    family = "Cox", nbasis = k)
+    cosso(x = train_dat %>% select(starts_with("X")) %>% data.matrix,
+          y = train_dat %>% select(time, status) %>% data.matrix,
+          family = "Cox", wt = wt, scale = FALSE, nbasis = k)
+  }, error = function(e) NULL)
+}
+
+run_bamlasso <- function(train_dat) {
+  train_sm_dat <- construct_smooth_data(mgcv_df, train_dat)
+  train_smooth_data <- train_sm_dat$data
+  raw <- bamlasso(x = train_smooth_data,
+                  y = Surv(train_dat$time, event = train_dat$status),
+                  family = "cox", group = make_group(names(train_smooth_data)),
+                  ss = c(0.04, 0.5))
+  cv_res <- tune.bgam(raw, nfolds = 5, s0 = seq(0.005, 0.1, length.out = 20), verbose = FALSE)
+  s0_min <- cv_res$s0[which.min(cv_res$deviance)]
+  bamlasso(x = train_smooth_data,
+           y = Surv(train_dat$time, event = train_dat$status),
+           family = "cox", group = make_group(names(train_smooth_data)),
+           ss = c(s0_min, 0.5))
+}
+
+
+# Parallel Execution ----------------------------------------------------
+model_fns <- list(
+  lasso = function() run_lasso(train_dat, test_dat),
+  mgcv = function() run_mgcv(train_dat),
+  cosso = function() run_cosso(train_dat),
+  acosso = function() run_acosso(train_dat),
+  bamlasso = function() run_bamlasso(train_dat)
+)
+
+model_results <- future_map(model_fns, function(f) f())
 
 # Fit Models------------------------------------------------------------------
 
 
 #### Linear Lasso ####
-
-
 lasso_mdl <- cv.glmnet(x = data.matrix(train_dat %>% select(starts_with("X"))),
                        y = train_dat %>% select(time, status) %>% data.matrix,
                        nfolds = 5, family = "cox")
