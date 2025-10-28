@@ -104,9 +104,10 @@ scale.c <- tryCatch({
 error = function(err) {
   if(!file.exists("Sim/Code/scale_vec.RDS"))
     stop("Please Generate scale_vec, and use 'R/calculate_scales' to generates scale_vec.RDS")
-  #scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
-  #scale.c <- scale_vec[[job_name]]
-  scale.c <- scale_vec[["bcam_sim_p=10,rho=0.5,pi_cns=0.3"]]
+  scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
+  temp <- str_split(job_name, "-")[[1]][1]
+  scale.c <- scale_vec[[temp]]
+  #scale.c <- scale_vec[["bcam_sim_p=4,rho=0.5,pi_cns=0.15"]]
   if(is.null(scale.c)) stop("No scale for this scenario")
   return(scale.c)
 })
@@ -131,7 +132,11 @@ train_dat <-  train_dat %>%
   mutate(time = min(c_time, eventtime)) %>%
   ungroup()
 
-
+mgcv_df <- data.frame(
+  Var = grep("X", names(train_dat), value = TRUE),
+  Func = "s",
+  Args = paste0("bs='cr', k=", k)
+)
 
 
 # Parallelization Setup --------------------------------------------------
@@ -240,12 +245,12 @@ lasso_var <- ((lasso_fnl_mdl$beta %>% as.vector())!=0) %>%
 
 
 
-# * Spline Specification --------------------------------------------------
-mgcv_df <- data.frame(
-  Var = grep("X", names(train_dat), value = TRUE),
-  Func = "s",
-  Args = paste0("bs='cr', k=", k)
-)
+# # * Spline Specification --------------------------------------------------
+# mgcv_df <- data.frame(
+#   Var = grep("X", names(train_dat), value = TRUE),
+#   Func = "s",
+#   Args = paste0("bs='cr', k=", k)
+# )
 
 
 # * mgcv --------------------------------------------------------------------
@@ -341,6 +346,14 @@ error = function(err) {
 
 if(!is.null(acosso_mdl)){
   acosso_tn_mdl <- tryCatch({
+
+     if(acosso_mdl$tune$Mgrid[1]<0.1){
+       acosso_mdl$tune$Mgrid <- acosso_mdl$tune$Mgrid[2:length(acosso_mdl$tune$Mgrid)]
+       acosso_mdl$tune$ACV <- acosso_mdl$tune$ACV[2:length(acosso_mdl$tune$ACV)]
+       acosso_mdl$tune$L2norm <- acosso_mdl$tune$L2norm[2:nrow(acosso_mdl$tune$L2norm),
+                                                        2:ncol(acosso_mdl$tune$L2norm)]
+     }
+
     tune.cosso(acosso_mdl, plot.it = FALSE)
   },
   error = function(err) {
