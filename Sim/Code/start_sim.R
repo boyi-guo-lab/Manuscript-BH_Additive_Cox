@@ -8,18 +8,18 @@ JOB_SCRIPT <- file.path(PROJ_ROOT, "Manuscript-BH_Additive_Cox","Sim", "Code", "
 # Simulation Parameters ---------------------------------------------------
 sim_prmt <- expand.grid(
   n_train = c(200),
-  p = c(4,10), # c(4, 10, 50, 100, 200),        # Number of Predictors
-  rho = c(0.5), # c(0, 0.5),                   # X Cov Structure AR(rho)
-  pi_cns = c(0.15) #c(0.15, 0.3, 0.45)        # Proportional of Censoring
+  p =  c(4, 10, 50, 100, 200),        # Number of Predictors
+  rho =  c(0, 0.5),                   # X Cov Structure AR(rho)
+  pi_cns = c(0.15, 0.3, 0.45)        # Proportional of Censoring
 )
 
 # ---- Cluster & job defaults for smoke test ----
 ACCOUNT   <- "owner-guest"
 PARTITION <- "kingspeak-shared-guest"
-ARRAY     <- "1-10"         # 2 reps; bump later for production
-TIME      <- "00:10:00"
-MEM       <- "4G"
-CPUS      <- "1"
+ARRAY     <- "1-20"         # 2 reps; bump later for production
+TIME      <- "02:00:00"
+MEM       <- "16G"
+CPUS      <- "4"
 
 
 
