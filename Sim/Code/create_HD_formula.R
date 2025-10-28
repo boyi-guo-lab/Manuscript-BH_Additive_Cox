@@ -60,7 +60,8 @@ create_HD_formula <- function(formula, data, spl_df, rm_overlap = TRUE, verbose=
     # Manipulate spl_df
     sp_trm <-  spl_df %>%
       dplyr::filter(Func!="")  %>% # Removing unnecessary terms
-      glue::glue_data("{Func}( {Var}{ifelse(is.na(Args)||Args=='', '', paste0(',', Args))})") %>%
+      rowwise()%>%
+      glue::glue_data("{Func}( {Var}{ifelse(is.na(Args)|Args=='', '', paste0(',', Args))})") %>%
       paste(collapse  = " + ")
     sp_trm <- paste0("~ . + " , sp_trm)
   }
