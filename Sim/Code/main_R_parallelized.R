@@ -106,7 +106,7 @@ error = function(err) {
   if(!file.exists("Sim/Code/scale_vec.RDS"))
     stop("Please Generate scale_vec, and use 'R/calculate_scales' to generates scale_vec.RDS")
   scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
-  temp <- str_split(job_name, "-")[[1]][1]
+  temp <- gsub("-", ",", job_name)
   scale.c <- scale_vec[[temp]]
   #scale.c <- scale_vec[["bcam_sim_p=4,rho=0.5,pi_cns=0.15"]]
   if(is.null(scale.c)) stop("No scale for this scenario")

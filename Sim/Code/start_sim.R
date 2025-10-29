@@ -25,7 +25,7 @@ CPUS      <- "4"
 
 start.sim <- function(n_train, p, rho, pi_cns) {
   # Unique job name per scenario
-  job.name <- paste0("bcam_sim_p=", p, "_","rho=", rho, "_","pi_cns=", pi_cns)
+  job.name <- paste0("bcam_sim_p=", p, "-","rho=", rho, "-","pi_cns=", pi_cns)
 
   # R output repos
   res_dir   <- file.path(PROJ_ROOT,  "Manuscript-BH_Additive_Cox", "Sim", "Res",   job.name)
