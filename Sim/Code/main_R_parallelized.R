@@ -74,6 +74,7 @@ source("Sim/Code/sim_pars_funs.R")
 
 ## Job Name
 job_name <- Sys.getenv('SLURM_JOB_NAME')
+print(job_name)
 
 ## Use Array ID as random seed ID
 it <- Sys.getenv('SLURM_ARRAY_TASK_ID') %>% as.numeric
@@ -486,7 +487,7 @@ ret <- list(
 )
 
 out_dir <- if (exists("resPath")) resPath else "Sim/Res"
-saveRDS(ret, file.path(out_dir, sprintf("it_%s.rds", it)))
+saveRDS(ret, file.path(out_dir, job_name, sprintf("it_%s.rds", it)))
 
 # Recommendation: to save the results in individual rds files
 #saveRDS(ret,
