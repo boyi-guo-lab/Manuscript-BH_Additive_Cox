@@ -487,7 +487,7 @@ ret <- list(
 )
 
 out_dir <- if (exists("resPath")) resPath else "Sim/Res"
-saveRDS(ret, file.path(out_dir, job_name, sprintf("it_%s.rds", it)))
+saveRDS(ret, file.path(out_dir, sprintf("it_%s.rds", it)))
 
 # Recommendation: to save the results in individual rds files
 #saveRDS(ret,
