@@ -16,7 +16,7 @@ sim_prmt <- expand.grid(
 # ---- Cluster & job defaults for smoke test ----
 ACCOUNT   <- "owner-guest"
 PARTITION <- "kingspeak-shared-guest"
-ARRAY     <- "21-40"         # 2 reps; bump later for production
+ARRAY     <- "1-10"         # 2 reps; bump later for production
 TIME      <- "03:00:00"
 MEM       <- "16G"
 CPUS      <- "4"
@@ -25,9 +25,7 @@ CPUS      <- "4"
 
 start.sim <- function(n_train, p, rho, pi_cns) {
   # Unique job name per scenario
-  job.name <- paste0("bcam_sim_p=", p, ",",
-                     "rho=", rho, ",",
-                     "pi_cns=", pi_cns)
+  job.name <- paste0("bcam_sim_p=", p, ",","rho=", rho, ",","pi_cns=", pi_cns)
 
   # R output repos
   res_dir   <- file.path(PROJ_ROOT,  "Manuscript-BH_Additive_Cox", "Sim", "Res",   job.name)
@@ -39,7 +37,7 @@ start.sim <- function(n_train, p, rho, pi_cns) {
   dir.create(log_dir,   recursive = TRUE, showWarnings = FALSE)
 
   # Slurm output repos
-  slurm_out_dir <- file.path(PROJ_ROOT, "Manuscript-BH_Additive_Cox", "Sim", "Log", "slurm_out")
+  slurm_out_dir <- file.path(PROJ_ROOT, "Manuscript-BH_Additive_Cox", "Sim", "Log", job.name, "slurm_out")
   dir.create(slurm_out_dir, recursive = TRUE, showWarnings = FALSE)
   slurm_out_path <- file.path(slurm_out_dir, "%x-%A_%a.out")
 
