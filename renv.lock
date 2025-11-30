@@ -18,8 +18,8 @@
       "RemoteRepo": "BHAM",
       "RemoteUsername": "s-huebler",
       "RemoteRef": "HEAD",
-      "RemoteSha": "654a5c33409f104c4377bdab0a07cd295a609c6b",
-      "Hash": "4ceb804ee42c0f94099241e93dcff0e7",
+      "RemoteSha": "05d4073a77f2b7416b4381c3b8e323ce4434d6c4",
+      "Hash": "24a2e824de0513b98471b6e042157e95",
       "Requirements": [
         "MASS",
         "dplyr",
