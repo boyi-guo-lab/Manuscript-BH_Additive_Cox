@@ -61,7 +61,6 @@ library(survival)
 library(simsurv)
 library(glmnet)
 
-
 ## Helper Functions
  source("Sim/Code/find_censor_parameter.R")
  source("Sim/Code/create_HD_formula.R")
@@ -75,6 +74,7 @@ source("Sim/Code/sim_pars_funs.R")
 
 ## Job Name
 job_name <- Sys.getenv('SLURM_JOB_NAME')
+print(job_name)
 
 ## Use Array ID as random seed ID
 it <- Sys.getenv('SLURM_ARRAY_TASK_ID') %>% as.numeric
@@ -105,9 +105,10 @@ scale.c <- tryCatch({
 error = function(err) {
   if(!file.exists("Sim/Code/scale_vec.RDS"))
     stop("Please Generate scale_vec, and use 'R/calculate_scales' to generates scale_vec.RDS")
-  #scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
-  #scale.c <- scale_vec[[job_name]]
-  scale.c <- scale_vec[["bcam_sim_p=10,rho=0.5,pi_cns=0.3"]]
+  scale_vec <- readRDS("Sim/Code/scale_vec.RDS")
+  temp <- gsub("-", ",", job_name)
+  scale.c <- scale_vec[[temp]]
+  #scale.c <- scale_vec[["bcam_sim_p=10,rho=0.5,pi_cns=0.3"]]
   if(is.null(scale.c)) stop("No scale for this scenario")
   return(scale.c)
 })
@@ -132,13 +133,20 @@ train_dat <-  train_dat %>%
   mutate(time = min(c_time, eventtime)) %>%
   ungroup()
 
-# Set Up Parallelization -------------------------------------------------
 
+# * Spline Specification --------------------------------------------------
+
+mgcv_df <- data.frame(
+  Var = grep("X", names(train_dat), value = TRUE),
+  Func = "s",
+  Args = paste0("bs='cr', k=", k)
+)
+
+# Set Up Parallelization -------------------------------------------------
 library(parallel)
 library(future)
 library(furrr)
 library(doParallel)
-
 
 n_cores <- as.numeric(Sys.getenv("SLURM_CPUS_PER_TASK", unset = 1))
 plan(multisession, workers = n_cores)
@@ -148,8 +156,6 @@ registerDoParallel(cores = n_cores)
 
 
 #### Linear Lasso ####
-
-
 lasso_mdl <- cv.glmnet(x = data.matrix(train_dat %>% select(starts_with("X"))),
                        y = train_dat %>% select(time, status) %>% data.matrix,
                        nfolds = 5, family = "cox")
@@ -159,12 +165,12 @@ lasso_fnl_mdl <- glmnet(x = data.matrix(train_dat %>% select(starts_with("X"))),
                         family = "cox", lambda = lasso_mdl$lambda.min)
 
 # Prediction
-lasso_train <- measure.cox(Surv(train_dat$time, train_dat$status),
+lasso_train <- BHMA::measure_cox(Surv(train_dat$time, train_dat$status),
                            predict(lasso_fnl_mdl,
                                    newx = data.matrix(train_dat %>% select(starts_with("X"))),
                                    type = "link")
 )
-lasso_test <- measure.cox(Surv(test_dat$eventtime, test_dat$status),
+lasso_test <- BHMA::measure_cox(Surv(test_dat$eventtime, test_dat$status),
                           predict(lasso_fnl_mdl,
                                   newx = data.matrix(test_dat %>% select(starts_with("X"))),
                                   type = "link")
@@ -176,12 +182,6 @@ lasso_var <- ((lasso_fnl_mdl$beta %>% as.vector())!=0) %>%
 
 
 
-# * Spline Specification --------------------------------------------------
-mgcv_df <- data.frame(
-  Var = grep("X", names(train_dat), value = TRUE),
-  Func = "s",
-  Args = paste0("bs='cr', k=", k)
-)
 
 
 # * mgcv --------------------------------------------------------------------
@@ -201,8 +201,8 @@ mgcv_plot <- NULL
 
 if(!is.null(mgcv_mdl)){
   # Prediction Results
-  mgcv_train <- measure.cox(Surv(train_dat$time, train_dat$status) , mgcv_mdl$linear.predictors)
-  mgcv_test <- measure.cox(Surv(test_dat$eventtime, test_dat$status),
+  mgcv_train <- BHMA::measure_cox(Surv(train_dat$time, train_dat$status) , mgcv_mdl$linear.predictors)
+  mgcv_test <- BHMA::measure_cox(Surv(test_dat$eventtime, test_dat$status),
                            predict(mgcv_mdl, newdata=test_dat, type = "link"))
 
   # Variable Selection Results
@@ -241,12 +241,12 @@ if(!is.null(cosso_mdl) && !is.null(cosso_tn_mdl)){
   cosso_train_lp <- predict.cosso(cosso_mdl,
                                   xnew=train_dat %>% select(starts_with("X")) %>% data.matrix,
                                   M=ifelse(!is.null(cosso_tn_mdl), cosso_tn_mdl$OptM, 2), type = "fit")
-  cosso_train <- measure.cox(Surv(train_dat$time, train_dat$status), cosso_train_lp)
+  cosso_train <- BHMA::measure_cox(Surv(train_dat$time, train_dat$status), cosso_train_lp)
 
   cosso_test_lp <- predict.cosso(cosso_mdl,
                                  xnew=test_dat %>% select(starts_with("X")) %>% data.matrix,
                                  M=ifelse(!is.null(cosso_tn_mdl), cosso_tn_mdl$OptM, 2), type = "fit")
-  cosso_test <- measure.cox(Surv(test_dat$eventtime, test_dat$status), cosso_test_lp)
+  cosso_test <- BHMA::measure_cox(Surv(test_dat$eventtime, test_dat$status), cosso_test_lp)
 
   # Variable Selection
   cosso_var <- rep(FALSE, p) %>% `names<-`(names(test_dat %>% select(starts_with("X"))))
@@ -277,6 +277,14 @@ error = function(err) {
 
 if(!is.null(acosso_mdl)){
   acosso_tn_mdl <- tryCatch({
+
+    if(acosso_mdl$tune$Mgrid[1]<0.1){
+      acosso_mdl$tune$Mgrid <- acosso_mdl$tune$Mgrid[2:length(acosso_mdl$tune$Mgrid)]
+      acosso_mdl$tune$ACV <- acosso_mdl$tune$ACV[2:length(acosso_mdl$tune$ACV)]
+      acosso_mdl$tune$L2norm <- acosso_mdl$tune$L2norm[2:nrow(acosso_mdl$tune$L2norm),
+                                                       2:ncol(acosso_mdl$tune$L2norm)]
+    }
+
     tune.cosso(acosso_mdl, plot.it = FALSE)
   },
   error = function(err) {
@@ -292,12 +300,12 @@ if(!is.null(acosso_mdl) && !is.null(acosso_tn_mdl)){
   acosso_train_lp <- predict.cosso(acosso_mdl,
                                    xnew = train_dat %>% select(starts_with("X")) %>% data.matrix,
                                    M = ifelse(!is.null(acosso_tn_mdl), acosso_tn_mdl$OptM, 2), type = "fit")
-  acosso_train <- measure.cox(Surv(train_dat$time, train_dat$status), acosso_train_lp)
+  acosso_train <- BHMA::measure_cox(Surv(train_dat$time, train_dat$status), acosso_train_lp)
 
   acosso_test_lp <- predict.cosso(acosso_mdl,
                                   xnew=test_dat %>% select(starts_with("X")) %>% data.matrix,
                                   M=ifelse(!is.null(acosso_tn_mdl), acosso_tn_mdl$OptM, 2), type = "fit")
-  acosso_test <- measure.cox(Surv(test_dat$eventtime, test_dat$status), acosso_test_lp)
+  acosso_test <- BHMA::measure_cox(Surv(test_dat$eventtime, test_dat$status), acosso_test_lp)
 
   acosso_var <- rep(FALSE, p) %>% `names<-`(names(test_dat %>% select(starts_with("X"))))
   acosso_var[predict.cosso(acosso_mdl, M=ifelse(!is.null(acosso_tn_mdl), acosso_tn_mdl$OptM, 2), type = "nonzero")] <- TRUE
@@ -318,21 +326,22 @@ bam_group <- make_group(names(train_smooth_data))
 
 
 #** bmlasso -----------------------------------------------------------------
-bamlasso_raw_mdl <- bamlasso( x = train_smooth_data, y = Surv(train_dat$time, event = train_dat$status),
-                              family = "cox", group = make_group(names(train_smooth_data)),
+bamlasso_raw_mdl <- BHAM::bamlasso( x = train_smooth_data, y = Surv(train_dat$time, event = train_dat$status),
+                              family = "cox", group = BHAM::make_group(names(train_smooth_data)),
                               ss = c(0.04, 0.5))
 
 blasso_s0_seq <- seq(0.005, 0.1, length.out = 20)    # TODO: need to be optimized
-blasso_cv_res <- tune.bgam(bamlasso_raw_mdl, nfolds = 5, s0= blasso_s0_seq, verbose = FALSE)
+blasso_cv_res <- BHAM::tune.bgam(bamlasso_raw_mdl, nfolds = 5, s0= blasso_s0_seq, verbose = FALSE)
 
 blasso_s0_min <- blasso_cv_res$s0[which.min(blasso_cv_res$deviance)]
-bamlasso_mdl <- bamlasso( x = train_smooth_data, y = Surv(train_dat$time, event = train_dat$status),
-                          family = "cox", group = make_group(names(train_smooth_data)),
+bamlasso_mdl <- BHAM::bamlasso( x = train_smooth_data, y = Surv(train_dat$time, event = train_dat$status),
+                          family = "cox", group = BHAM::make_group(names(train_smooth_data)),
                           ss = c(blasso_s0_min, 0.5))
 
 # Prediction
-bamlasso_train <- measure.cox(Surv(train_dat$time, train_dat$status) , bamlasso_mdl$linear.predictors)
-bamlasso_test <- measure.bh(bamlasso_mdl, test_sm_dat, Surv(test_dat$eventtime, test_dat$status))
+bamlasso_train <- BHAM::measure_cox(Surv(train_dat$time, train_dat$status) , bamlasso_mdl$linear.predictors)
+bamlasso_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status) , bamlasso_mdl$linear.predictors)
+#bamlasso_test <- measure.bh(bamlasso_mdl, test_sm_dat, Surv(test_dat$eventtime, test_dat$status))
 
 
 # Variable Selection
@@ -366,8 +375,8 @@ bamlasso_var[bamlasso_vs_part$`Non-parametric`$Variable] <- TRUE
 #
 #
 # if(!is.null(bacox_mdl) ){
-#   bacox_train <- measure.cox(Surv(train_dat$time, train_dat$status) , bacox_mdl$linear.predictors)
-#   # bacox_test <- measure.cox(Surv(test_dat$eventtime, test_dat$status),
+#   bacox_train <- BHMA::measure_cox(Surv(train_dat$time, train_dat$status) , bacox_mdl$linear.predictors)
+#   # bacox_test <- BHMA::measure_cox(Surv(test_dat$eventtime, test_dat$status),
 #   #                          predict(mgcv_mdl, newdata=test_dat, type = "link"))
 #   bacox_test <- measure.bh(bacox_mdl, test_sm_dat, Surv(test_dat$eventtime, test_dat$status))
 # } else {
