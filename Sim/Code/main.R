@@ -55,7 +55,7 @@ scalePath <- args$scalePath
 library(tidyverse)
 library(mgcv)
 library(cosso)
-library(BhGLM)
+#library(BhGLM)
 library(BHAM)
 library(survival)
 library(simsurv)
