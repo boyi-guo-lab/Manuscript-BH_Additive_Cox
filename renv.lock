@@ -18,8 +18,8 @@
       "RemoteRepo": "BHAM",
       "RemoteUsername": "s-huebler",
       "RemoteRef": "HEAD",
-      "RemoteSha": "05d4073a77f2b7416b4381c3b8e323ce4434d6c4",
-      "Hash": "24a2e824de0513b98471b6e042157e95",
+      "RemoteSha": "293f4eef32facdcce1347205b33c382476706b0b",
+      "Hash": "45e28b05c068d5feb0b95a8c09ba5b52",
       "Requirements": [
         "MASS",
         "dplyr",
@@ -147,10 +147,10 @@
     },
     "Rcpp": {
       "Package": "Rcpp",
-      "Version": "1.0.14",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e7bdd9ee90e96921ca8a0f1972d66682",
+      "Hash": "0d3d8867aa41b0d9ad113b50c169ecb2",
       "Requirements": []
     },
     "RcppEigen": {
@@ -192,6 +192,14 @@
       "Requirements": [
         "slam"
       ]
+    },
+    "S7": {
+      "Package": "S7",
+      "Version": "0.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "9da85950949574264f92f91f0e23de26",
+      "Requirements": []
     },
     "SparseM": {
       "Package": "SparseM",
@@ -1047,21 +1055,18 @@
     },
     "ggplot2": {
       "Package": "ggplot2",
-      "Version": "3.5.2",
+      "Version": "4.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7ad64861e028a777d7d67ff83231b548",
+      "Hash": "1bfa14b2a1668b3569dafb0478b2636b",
       "Requirements": [
-        "MASS",
+        "S7",
         "cli",
-        "glue",
         "gtable",
         "isoband",
         "lifecycle",
-        "mgcv",
         "rlang",
         "scales",
-        "tibble",
         "vctrs",
         "withr"
       ]
@@ -1781,10 +1786,10 @@
     },
     "magrittr": {
       "Package": "magrittr",
-      "Version": "2.0.3",
+      "Version": "2.0.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7ce2733a9826b3aeb1775d56fd305472",
+      "Hash": "8b3b213aa0c54a0dec254288ccb545d1",
       "Requirements": []
     },
     "markdown": {
@@ -2012,10 +2017,10 @@
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.10.2",
+      "Version": "1.11.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1098920a19b5cd5a15bacdc74a89979d",
+      "Hash": "1395e64f2689ffd503657778e810cee2",
       "Requirements": [
         "cli",
         "glue",
@@ -2141,10 +2146,10 @@
     },
     "purrr": {
       "Package": "purrr",
-      "Version": "1.0.4",
+      "Version": "1.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "cc8b5d43f90551fa6df0a6be5d640a4f",
+      "Hash": "5150f0e38b8150315ac853acade2740e",
       "Requirements": [
         "cli",
         "lifecycle",
