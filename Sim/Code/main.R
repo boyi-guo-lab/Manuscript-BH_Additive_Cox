@@ -85,6 +85,9 @@ set.seed(it)
 x_all <- MASS::mvrnorm(n_train+n_test, rep(0, p), AR(p, rho)) |>
   data.frame()
 eta_all <- with(x_all, f_1(X1) + f_2(X2) + f_3(X3) + f_4(X4))
+# Adding adjustable signal to noise ratio
+
+
 dat_all <- simsurv::simsurv(dist = "weibull",
                             lambdas = scale.t,
                             gammas = shape.t,
@@ -154,6 +157,27 @@ registerDoParallel(cores = n_cores)
 
 # Fit Models------------------------------------------------------------------
 
+#### Oracle ####
+start_time_oracle <- Sys.time()
+oracle_mdl <- coxph(Surv(time, status) ~ eta,
+                    data = train_dat)
+
+
+
+#Prediction
+oracle_train <- BHAM::measure_cox(Surv(train_dat$time, train_dat$status),
+                                  predict(oracle_mdl,
+                                          newdata = train_dat |> select(eta),
+                                          type = "lp")
+)
+
+oracle_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status),
+                                 predict(oracle_mdl,
+                                         newdata = test_dat |> select(eta),
+                                         type = "lp")
+)
+end_time_oracle <- Sys.time()
+oracle_time = end_time_oracle-start_time_oracle
 
 #### Linear Lasso ####
 
@@ -426,6 +450,7 @@ if(all(is.na(bamlasso_var))){
 # Overall
 ret <- list(
   train_res = list(
+    oracle = oracle_train,
     lasso = lasso_train,
     mgcv = mgcv_train,
     cosso = cosso_train,
@@ -434,6 +459,7 @@ ret <- list(
     bamlasso = bamlasso_train
   ),
   test_res = list(
+    oracle = oracle_test,
     lasso = lasso_test,
     mgcv = mgcv_test,
     cosso = cosso_test,
@@ -458,6 +484,7 @@ ret <- list(
   bam_select = bamlasso_vs_part,
 
  timing = list(
+   oracle = oracle_time
    lasso = lasso_time,
    mgcv = mgcv_time,
    cosso = cosso_time,
