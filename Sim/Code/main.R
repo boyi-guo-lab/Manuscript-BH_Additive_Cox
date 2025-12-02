@@ -484,7 +484,7 @@ ret <- list(
   bam_select = bamlasso_vs_part,
 
  timing = list(
-   oracle = oracle_time
+   oracle = oracle_time,
    lasso = lasso_time,
    mgcv = mgcv_time,
    cosso = cosso_time,
