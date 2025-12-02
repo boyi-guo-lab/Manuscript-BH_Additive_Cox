@@ -3,10 +3,10 @@
 ## Evaluate the simulation parameters in the R global environment
 ## For the Toy Example
 ## It is equivalent to run
-# n_train <- 200
-# p <- c(4, 10, 50, 100, 200)[2]
-# rho <- c(0, 0.5)[2]
-# pi_cns <- c(0.15, 0.3, 0.4)[2]
+ # n_train <- 200
+ # p <- c(4, 10, 50, 100, 200)[2]
+ # rho <- c(0, 0.5)[2]
+ # pi_cns <- c(0.15, 0.3, 0.4)[2]
 
 library(argparse)
 parser <- ArgumentParser(description="Run a simulation study")
@@ -189,6 +189,7 @@ lasso_time <- end_time_lasso - start_time_lasso
 # * mgcv --------------------------------------------------------------------
 
 start_time_mgcv<- Sys.time()
+mgcv_converge <- TRUE
 mgcv_mdl <- tryCatch({
   gam(create_HD_formula(time~1, spl_df = mgcv_df), data = train_dat,
       family = cox.ph(), weight = status)
@@ -219,6 +220,11 @@ if(!is.null(mgcv_mdl)){
 end_time_mgcv<- Sys.time()
 mgcv_time <- end_time_mgcv - start_time_mgcv
 
+if(all(is.na(mgcv_var))){
+  mgcv_time <- NA
+}
+
+
 # * COSSO -------------------------------------------------------------------
 start_time_cosso <- Sys.time()
 cosso_mdl <-  tryCatch({cosso(x = train_dat |> select(starts_with("X")) |> data.matrix(),
@@ -239,6 +245,18 @@ if(!is.null(cosso_mdl)){
     return(NULL)
   }
   )
+}
+
+# If tuning failed, increase Kfold
+if(is.null(cosso_tn_mdl)){
+  cosso_tn_mdl <- tryCatch({
+    tune.cosso(cosso_mdl, plot.it = FALSE, folds = 10)
+  },
+  error = function(err) {
+    return(NULL)
+  }
+  )
+
 }
 
 cosso_var <- rep(NA, p) |> `names<-`(names(test_dat |> select(starts_with("X"))))
@@ -269,6 +287,10 @@ if(!is.null(cosso_mdl) && !is.null(cosso_tn_mdl)){
 
 end_time_cosso <- Sys.time()
 cosso_time <- end_time_cosso - start_time_cosso
+
+if(all(is.na(cosso_var))){
+  cosso_time <- NA
+}
 
 #### Fit ACOSSO Models ####
 
@@ -304,6 +326,19 @@ if(!is.null(acosso_mdl)){
 }
 
 
+# If tuning failed, increase Kfold
+if(is.null(acosso_tn_mdl)){
+  acosso_tn_mdl <- tryCatch({
+    tune.cosso(acosso_mdl, plot.it = FALSE, folds = 10)
+  },
+  error = function(err) {
+    return(NULL)
+  }
+  )
+
+}
+
+
 acosso_var <- rep(NA, p) |> `names<-`(names(test_dat |> select(starts_with("X"))))
 if(!is.null(acosso_mdl) && !is.null(acosso_tn_mdl)){
 
@@ -327,6 +362,11 @@ if(!is.null(acosso_mdl) && !is.null(acosso_tn_mdl)){
 
 end_time_acosso <- Sys.time()
 acossso_time <- end_time_acosso - start_time_acosso
+
+
+if(all(is.na(acosso_var))){
+  acosso_time <- NA
+}
 
 # * BHAM ----------------------------------------------------------
 
@@ -354,51 +394,32 @@ bamlasso_mdl <- BHAM::bamlasso( x = train_smooth_data, y = Surv(train_dat$time, 
 
 # Prediction
 bamlasso_train <- BHAM::measure_cox(Surv(train_dat$time, train_dat$status) , bamlasso_mdl$linear.predictors)
-bamlasso_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status) , bamlasso_mdl)
+
+bamlasso_mdl$offset <- 0
+bamlasso_test_lp <- predict(bamlasso_mdl,
+                            newx = as.matrix(test_sm_dat)[,colnames(bamlasso_mdl$x), drop = F],
+                            type = "link")
+bamlasso_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status) , bamlasso_test_lp)
+#bamlasso_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status) , bamlasso_mdl)
 #bamlasso_test <- measure.bh(bamlasso_mdl, test_sm_dat, Surv(test_dat$eventtime, test_dat$status))
 
 
 # Variable Selection
 bamlasso_vs_part <- bamlasso_var_selection(bamlasso_mdl)
+bamlasso_vs_part$`Non-parametric` <- bamlasso_vs_part$`Non-parametric` %>%
+  rowwise()%>%
+  mutate(Selected = ifelse(Linear|Nonlinear, TRUE, FALSE))
 bamlasso_var <- rep(FALSE, p) %>% `names<-`(names(test_dat %>% select(starts_with("X"))))
-bamlasso_var[bamlasso_vs_part$`Non-parametric`$Variable] <- TRUE
+bamlasso_var[bamlasso_vs_part$`Non-parametric`$Variable] <- bamlasso_vs_part$`Non-parametric`$Selected
 
 end_time_bham <- Sys.time()
 bham_time <- end_time_bham - start_time_bham
 
+if(all(is.na(bamlasso_var))){
+  bham_time <- NA
+}
+
 # Effect Plotting
-
-
-#** Bacox ----------------------------------------------------------
-# bacox_mdl <- tryCatch({bacox_raw_mdl <- bacoxph(Surv(time, event = status) ~ .,
-#                          data = data.frame(time = train_dat$time, status = train_dat$status,
-#                                            train_smooth_data),
-#                          prior = mde(), group = make_group(names(train_smooth_data)),
-#                          method.coef = bam_group)
-#
-# bacox_s0_seq <- seq(0.005, 0.1, length.out = 20)    # TODO: need to be optimized
-# bacox_cv_res <- tune.bgam(bacox_raw_mdl, nfolds = 5, s0= bacox_s0_seq, verbose = FALSE)
-# #
-# bacox_s0_min <- bacox_cv_res$s0[which.min(bacox_cv_res$deviance)]
-# #
-# bacoxph(Surv(train_dat$time, train_dat$status) ~ ., data = train_smooth_data,
-#                      prior = mde(s0 = bacox_s0_min), group = make_group(names(train_smooth_data)),
-#                      method.coef = make_group(names(train_smooth_data)))
-# },
-# error = function(err) {
-#   return(NULL)
-# })
-#
-#
-#
-# if(!is.null(bacox_mdl) ){
-#   bacox_train <- BHAM::measure_cox(Surv(train_dat$time, train_dat$status) , bacox_mdl$linear.predictors)
-#   # bacox_test <- BHAM::measure_cox(Surv(test_dat$eventtime, test_dat$status),
-#   #                          predict(mgcv_mdl, newdata=test_dat, type = "link"))
-#   bacox_test <- measure.bh(bacox_mdl, test_sm_dat, Surv(test_dat$eventtime, test_dat$status))
-# } else {
-#   bacox_train <- bacox_test <- make_null_res("cox")
-# }
 
 # Save Simulation Results -------------------------------------------------
 
@@ -420,8 +441,11 @@ ret <- list(
     # bacox = bacox_test,
     bamlasso = bamlasso_test
   ),
-  # scale.c = scale.c,                             # The scale parameter
-  p.cen = mean(train_dat$status==0),              # Censoring proportion in training data
+
+  censoring = list(
+   scale.c = scale.c,                             # The scale parameter
+  p.cen_train = mean(train_dat$status==0)              # Censoring proportion in training data
+ ),
 
   var_slct = list(
     lasso = lasso_var,
@@ -431,7 +455,15 @@ ret <- list(
     bamlasso = bamlasso_var
   ),
 
-  bam_select = bamlasso_vs_part
+  bam_select = bamlasso_vs_part,
+
+ timing = list(
+   lasso = lasso_time,
+   mgcv = mgcv_time,
+   cosso = cosso_time,
+   acosso = acosso_time,
+   bamlasso = bham_time
+ )
 )
 
 out_dir <- if (exists("resPath")) resPath else "Sim/Res"
