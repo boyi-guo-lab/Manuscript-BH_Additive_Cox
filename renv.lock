@@ -19,7 +19,7 @@
       "RemoteUsername": "s-huebler",
       "RemoteRef": "HEAD",
       "RemoteSha": "b98aa654728f819d51d5a94931f06c4296fc72a4",
-      "Hash": "bcfff2ba42643658bf4b9b207eac274a",
+      "Hash": "10443b6519d3f1a5123b34259f2e07e1",
       "Requirements": [
         "MASS",
         "dplyr",
@@ -636,6 +636,22 @@
         "tidyr"
       ]
     },
+    "doParallel": {
+      "Package": "doParallel",
+      "Version": "1.0.17",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "doParallel",
+      "RemoteRef": "doParallel",
+      "RemoteRepos": "https://cran.rstudio.com",
+      "RemoteSha": "1.0.17",
+      "Hash": "451e5edf411987991ab6a5410c45011f",
+      "Requirements": [
+        "foreach",
+        "iterators"
+      ]
+    },
     "dplyr": {
       "Package": "dplyr",
       "Version": "1.1.4",
@@ -772,6 +788,26 @@
       "Repository": "CRAN",
       "Hash": "7eb1e342eee7e0a7449c49cdaa526d39",
       "Requirements": []
+    },
+    "furrr": {
+      "Package": "furrr",
+      "Version": "0.3.1",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "furrr",
+      "RemoteRef": "furrr",
+      "RemoteRepos": "https://cran.rstudio.com",
+      "RemoteSha": "0.3.1",
+      "Hash": "da7a4c32196cb2262a41dd5a25d486ff",
+      "Requirements": [
+        "future",
+        "globals",
+        "lifecycle",
+        "purrr",
+        "rlang",
+        "vctrs"
+      ]
     },
     "future": {
       "Package": "future",
