@@ -30,7 +30,7 @@ cd "$PROJECT_ROOT"
 
 
 # ---- Run your R pipeline ----
-Rscript Sim/Code/main_R.R \
+Rscript Sim/Code/main.R \
   --n_train ${n_train} \
   --p ${p} \
   --rho ${rho} \
