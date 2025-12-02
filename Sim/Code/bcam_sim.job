@@ -6,8 +6,8 @@
 
 # NOTE: account/partition/array/time/mem are set from start_sim.R
 # SBATCH --account=guo
-# SBATCH --partition=lonepeak-shared
-# SBATCH --time=2:00:00
+# SBATCH --partition=kingspeak-shared
+# SBATCH --time=0:20:00
 # SBATCH --mem-per-cpu=5000
 # SBATCH --cpus-per-task=1
 
@@ -30,7 +30,7 @@ cd "$PROJECT_ROOT"
 
 
 # ---- Run your R pipeline ----
-Rscript Sim/Code/main_R_parallelized.R \
+Rscript Sim/Code/main_R.R \
   --n_train ${n_train} \
   --p ${p} \
   --rho ${rho} \
