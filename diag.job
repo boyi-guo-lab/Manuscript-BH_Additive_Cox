@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --account=guo
+#SBATCH --partition=kingspeak-shared
+#SBATCH --time=2:00
+#SBATCH --mem=2G
+#SBATCH --output=diag.out
+
+# Load the same R version used in RStudio Server
+module load r/4.4.2   # or the exact module name you use
+
+# Go to your project directory
+cd /uufs/chpc.utah.edu/common/home/u1477302/Documents/SSL/Manuscript-BH_Additive_Cox
+
+# Run diag
+Rscript diag.R
+

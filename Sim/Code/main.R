@@ -386,7 +386,7 @@ if(!is.null(acosso_mdl) && !is.null(acosso_tn_mdl)){
 }
 
 end_time_acosso <- Sys.time()
-acossso_time <- end_time_acosso - start_time_acosso
+acosso_time <- end_time_acosso - start_time_acosso
 
 
 if(all(is.na(acosso_var))){

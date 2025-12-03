@@ -1,0 +1,3 @@
+LIBPATHS IN BATCH:
+[1] "/uufs/chpc.utah.edu/common/home/u1477302/Documents/SSL/Manuscript-BH_Additive_Cox/renv/library/R-4.4/x86_64-redhat-linux-gnu"
+[2] "/usr/lib64/R/library"                                                                                                        

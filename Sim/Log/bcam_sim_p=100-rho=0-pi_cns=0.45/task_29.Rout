@@ -1,0 +1,296 @@
+ℹ Using R 4.4.2 (lockfile was generated with R 4.5.1)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Loading required package: nlme
+
+Attaching package: ‘nlme’
+
+The following object is masked from ‘package:dplyr’:
+
+    collapse
+
+This is mgcv 1.9-3. For overview type 'help("mgcv-package")'.
+Loading required package: quadprog
+Loading required package: Rglpk
+Loading required package: slam
+Using the GLPK callable library version 4.65
+Loading required package: parallel
+Loading required package: glmnet
+Loading required package: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+Loaded glmnet 4.1-10
+
+Attaching package: ‘BHAM’
+
+The following objects are masked from ‘package:BhGLM’:
+
+    De, mde, mt, NegBin, Student
+
+[1] "bcam_sim_p=100-rho=0-pi_cns=0.45"
+
+Attaching package: ‘future’
+
+The following object is masked from ‘package:survival’:
+
+    cluster
+
+Loading required package: foreach
+
+Attaching package: ‘foreach’
+
+The following objects are masked from ‘package:purrr’:
+
+    accumulate, when
+
+Loading required package: iterators
+ℹ Using R 4.4.2 (lockfile was generated with R 4.5.1)
+ℹ Using R 4.4.2 (lockfile was generated with R 4.5.1)
+ℹ Using R 4.4.2 (lockfile was generated with R 4.5.1)
+ℹ Using R 4.4.2 (lockfile was generated with R 4.5.1)
+Create formula:
+time ~ s(X1, bs = "cr", k = 10) + s(X2, bs = "cr", k = 10) + 
+    s(X3, bs = "cr", k = 10) + s(X4, bs = "cr", k = 10) + s(X5, 
+    bs = "cr", k = 10) + s(X6, bs = "cr", k = 10) + s(X7, bs = "cr", 
+    k = 10) + s(X8, bs = "cr", k = 10) + s(X9, bs = "cr", k = 10) + 
+    s(X10, bs = "cr", k = 10) + s(X11, bs = "cr", k = 10) + s(X12, 
+    bs = "cr", k = 10) + s(X13, bs = "cr", k = 10) + s(X14, bs = "cr", 
+    k = 10) + s(X15, bs = "cr", k = 10) + s(X16, bs = "cr", k = 10) + 
+    s(X17, bs = "cr", k = 10) + s(X18, bs = "cr", k = 10) + s(X19, 
+    bs = "cr", k = 10) + s(X20, bs = "cr", k = 10) + s(X21, bs = "cr", 
+    k = 10) + s(X22, bs = "cr", k = 10) + s(X23, bs = "cr", k = 10) + 
+    s(X24, bs = "cr", k = 10) + s(X25, bs = "cr", k = 10) + s(X26, 
+    bs = "cr", k = 10) + s(X27, bs = "cr", k = 10) + s(X28, bs = "cr", 
+    k = 10) + s(X29, bs = "cr", k = 10) + s(X30, bs = "cr", k = 10) + 
+    s(X31, bs = "cr", k = 10) + s(X32, bs = "cr", k = 10) + s(X33, 
+    bs = "cr", k = 10) + s(X34, bs = "cr", k = 10) + s(X35, bs = "cr", 
+    k = 10) + s(X36, bs = "cr", k = 10) + s(X37, bs = "cr", k = 10) + 
+    s(X38, bs = "cr", k = 10) + s(X39, bs = "cr", k = 10) + s(X40, 
+    bs = "cr", k = 10) + s(X41, bs = "cr", k = 10) + s(X42, bs = "cr", 
+    k = 10) + s(X43, bs = "cr", k = 10) + s(X44, bs = "cr", k = 10) + 
+    s(X45, bs = "cr", k = 10) + s(X46, bs = "cr", k = 10) + s(X47, 
+    bs = "cr", k = 10) + s(X48, bs = "cr", k = 10) + s(X49, bs = "cr", 
+    k = 10) + s(X50, bs = "cr", k = 10) + s(X51, bs = "cr", k = 10) + 
+    s(X52, bs = "cr", k = 10) + s(X53, bs = "cr", k = 10) + s(X54, 
+    bs = "cr", k = 10) + s(X55, bs = "cr", k = 10) + s(X56, bs = "cr", 
+    k = 10) + s(X57, bs = "cr", k = 10) + s(X58, bs = "cr", k = 10) + 
+    s(X59, bs = "cr", k = 10) + s(X60, bs = "cr", k = 10) + s(X61, 
+    bs = "cr", k = 10) + s(X62, bs = "cr", k = 10) + s(X63, bs = "cr", 
+    k = 10) + s(X64, bs = "cr", k = 10) + s(X65, bs = "cr", k = 10) + 
+    s(X66, bs = "cr", k = 10) + s(X67, bs = "cr", k = 10) + s(X68, 
+    bs = "cr", k = 10) + s(X69, bs = "cr", k = 10) + s(X70, bs = "cr", 
+    k = 10) + s(X71, bs = "cr", k = 10) + s(X72, bs = "cr", k = 10) + 
+    s(X73, bs = "cr", k = 10) + s(X74, bs = "cr", k = 10) + s(X75, 
+    bs = "cr", k = 10) + s(X76, bs = "cr", k = 10) + s(X77, bs = "cr", 
+    k = 10) + s(X78, bs = "cr", k = 10) + s(X79, bs = "cr", k = 10) + 
+    s(X80, bs = "cr", k = 10) + s(X81, bs = "cr", k = 10) + s(X82, 
+    bs = "cr", k = 10) + s(X83, bs = "cr", k = 10) + s(X84, bs = "cr", 
+    k = 10) + s(X85, bs = "cr", k = 10) + s(X86, bs = "cr", k = 10) + 
+    s(X87, bs = "cr", k = 10) + s(X88, bs = "cr", k = 10) + s(X89, 
+    bs = "cr", k = 10) + s(X90, bs = "cr", k = 10) + s(X91, bs = "cr", 
+    k = 10) + s(X92, bs = "cr", k = 10) + s(X93, bs = "cr", k = 10) + 
+    s(X94, bs = "cr", k = 10) + s(X95, bs = "cr", k = 10) + s(X96, 
+    bs = "cr", k = 10) + s(X97, bs = "cr", k = 10) + s(X98, bs = "cr", 
+    k = 10) + s(X99, bs = "cr", k = 10) + s(X100, bs = "cr", 
+    k = 10)
+<environment: 0xa37eee8>
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.042 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.041 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.041 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.044 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.043 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.044 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.045 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.047 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.051 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.051 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.119 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.804 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.759 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 1.454 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.984 minutes 
+There were 50 or more warnings (use warnings() to see the first 50)
+Warning messages:
+1: from glmnet C++ code (error code -30071); Numerical error at 71th lambda value; solutions for larger values of lambda returned 
+2: from glmnet C++ code (error code -30061); Numerical error at 61th lambda value; solutions for larger values of lambda returned 
+3: from glmnet C++ code (error code -30078); Numerical error at 78th lambda value; solutions for larger values of lambda returned 
+Create formula:
+time ~ s(X1, bs = "cr", k = 10) + s(X2, bs = "cr", k = 10) + 
+    s(X3, bs = "cr", k = 10) + s(X4, bs = "cr", k = 10) + s(X5, 
+    bs = "cr", k = 10) + s(X6, bs = "cr", k = 10) + s(X7, bs = "cr", 
+    k = 10) + s(X8, bs = "cr", k = 10) + s(X9, bs = "cr", k = 10) + 
+    s(X10, bs = "cr", k = 10) + s(X11, bs = "cr", k = 10) + s(X12, 
+    bs = "cr", k = 10) + s(X13, bs = "cr", k = 10) + s(X14, bs = "cr", 
+    k = 10) + s(X15, bs = "cr", k = 10) + s(X16, bs = "cr", k = 10) + 
+    s(X17, bs = "cr", k = 10) + s(X18, bs = "cr", k = 10) + s(X19, 
+    bs = "cr", k = 10) + s(X20, bs = "cr", k = 10) + s(X21, bs = "cr", 
+    k = 10) + s(X22, bs = "cr", k = 10) + s(X23, bs = "cr", k = 10) + 
+    s(X24, bs = "cr", k = 10) + s(X25, bs = "cr", k = 10) + s(X26, 
+    bs = "cr", k = 10) + s(X27, bs = "cr", k = 10) + s(X28, bs = "cr", 
+    k = 10) + s(X29, bs = "cr", k = 10) + s(X30, bs = "cr", k = 10) + 
+    s(X31, bs = "cr", k = 10) + s(X32, bs = "cr", k = 10) + s(X33, 
+    bs = "cr", k = 10) + s(X34, bs = "cr", k = 10) + s(X35, bs = "cr", 
+    k = 10) + s(X36, bs = "cr", k = 10) + s(X37, bs = "cr", k = 10) + 
+    s(X38, bs = "cr", k = 10) + s(X39, bs = "cr", k = 10) + s(X40, 
+    bs = "cr", k = 10) + s(X41, bs = "cr", k = 10) + s(X42, bs = "cr", 
+    k = 10) + s(X43, bs = "cr", k = 10) + s(X44, bs = "cr", k = 10) + 
+    s(X45, bs = "cr", k = 10) + s(X46, bs = "cr", k = 10) + s(X47, 
+    bs = "cr", k = 10) + s(X48, bs = "cr", k = 10) + s(X49, bs = "cr", 
+    k = 10) + s(X50, bs = "cr", k = 10) + s(X51, bs = "cr", k = 10) + 
+    s(X52, bs = "cr", k = 10) + s(X53, bs = "cr", k = 10) + s(X54, 
+    bs = "cr", k = 10) + s(X55, bs = "cr", k = 10) + s(X56, bs = "cr", 
+    k = 10) + s(X57, bs = "cr", k = 10) + s(X58, bs = "cr", k = 10) + 
+    s(X59, bs = "cr", k = 10) + s(X60, bs = "cr", k = 10) + s(X61, 
+    bs = "cr", k = 10) + s(X62, bs = "cr", k = 10) + s(X63, bs = "cr", 
+    k = 10) + s(X64, bs = "cr", k = 10) + s(X65, bs = "cr", k = 10) + 
+    s(X66, bs = "cr", k = 10) + s(X67, bs = "cr", k = 10) + s(X68, 
+    bs = "cr", k = 10) + s(X69, bs = "cr", k = 10) + s(X70, bs = "cr", 
+    k = 10) + s(X71, bs = "cr", k = 10) + s(X72, bs = "cr", k = 10) + 
+    s(X73, bs = "cr", k = 10) + s(X74, bs = "cr", k = 10) + s(X75, 
+    bs = "cr", k = 10) + s(X76, bs = "cr", k = 10) + s(X77, bs = "cr", 
+    k = 10) + s(X78, bs = "cr", k = 10) + s(X79, bs = "cr", k = 10) + 
+    s(X80, bs = "cr", k = 10) + s(X81, bs = "cr", k = 10) + s(X82, 
+    bs = "cr", k = 10) + s(X83, bs = "cr", k = 10) + s(X84, bs = "cr", 
+    k = 10) + s(X85, bs = "cr", k = 10) + s(X86, bs = "cr", k = 10) + 
+    s(X87, bs = "cr", k = 10) + s(X88, bs = "cr", k = 10) + s(X89, 
+    bs = "cr", k = 10) + s(X90, bs = "cr", k = 10) + s(X91, bs = "cr", 
+    k = 10) + s(X92, bs = "cr", k = 10) + s(X93, bs = "cr", k = 10) + 
+    s(X94, bs = "cr", k = 10) + s(X95, bs = "cr", k = 10) + s(X96, 
+    bs = "cr", k = 10) + s(X97, bs = "cr", k = 10) + s(X98, bs = "cr", 
+    k = 10) + s(X99, bs = "cr", k = 10) + s(X100, bs = "cr", 
+    k = 10)
+Warning messages:
+1: from glmnet C++ code (error code -30001); Numerical error at 1th lambda value; solutions for larger values of lambda returned 
+2: In getcoef(fit, nvars, nx, vnames) :
+  an empty model has been returned; probably a convergence issue
+3: from glmnet C++ code (error code -30001); Numerical error at 1th lambda value; solutions for larger values of lambda returned 
+4: In getcoef(fit, nvars, nx, vnames) :
+  an empty model has been returned; probably a convergence issue
+5: from glmnet C++ code (error code -30001); Numerical error at 1th lambda value; solutions for larger values of lambda returned 
+6: In getcoef(fit, nvars, nx, vnames) :
+  an empty model has been returned; probably a convergence issue
+7: from glmnet C++ code (error code -30001); Numerical error at 1th lambda value; solutions for larger values of lambda returned 
+8: In getcoef(fit, nvars, nx, vnames) :
+  an empty model has been returned; probably a convergence issue
+9: from glmnet C++ code (error code -30001); Numerical error at 1th lambda value; solutions for larger values of lambda returned 
+10: In getcoef(fit, nvars, nx, vnames) :
+  an empty model has been returned; probably a convergence issue
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.039 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.039 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.039 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.039 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.047 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.039 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.04 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.041 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.042 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.043 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.047 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.045 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.047 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.049 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.052 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.135 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.565 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 0.628 minutes 
+Fitting ncv*nfolds = 5 models: 
+1 2 3 4 5 
+ Cross-validation time: 1.031 minutes 
+There were 50 or more warnings (use warnings() to see the first 50)
