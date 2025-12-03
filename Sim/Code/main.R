@@ -8,6 +8,7 @@
  # rho <- c(0, 0.5)[2]
  # pi_cns <- c(0.15, 0.3, 0.4)[2]
 
+source("renv/activate.R")
 library(argparse)
 parser <- ArgumentParser(description="Run a simulation study")
 
@@ -272,7 +273,7 @@ if(!is.null(cosso_mdl)){
 }
 
 # If tuning failed, increase Kfold
-if(is.null(cosso_tn_mdl)){
+if(!exists("cosso_tn_mdl")){
   cosso_tn_mdl <- tryCatch({
     tune.cosso(cosso_mdl, plot.it = FALSE, folds = 10)
   },
@@ -351,7 +352,7 @@ if(!is.null(acosso_mdl)){
 
 
 # If tuning failed, increase Kfold
-if(is.null(acosso_tn_mdl)){
+if(!exists("acosso_tn_mdl")){
   acosso_tn_mdl <- tryCatch({
     tune.cosso(acosso_mdl, plot.it = FALSE, folds = 10)
   },
